@@ -1,5 +1,5 @@
 ﻿namespace FSharpTarinin.Basics
-module M1_MitaJaMiksiFSharp = 
+module M1_HelloFSharp = 
      (*
      1. Mikä on F# ja miksi käyttäisin sitä?
 
@@ -46,7 +46,7 @@ module M1_MitaJaMiksiFSharp =
      form.Show()
 
      
-     // Klassinen "Hello, nimi!" muunnos.
+     // Klassinen "Hello, nimi!" muunnos Hello Worldista.
      let form = new Form()
      let question = new Label(Dock = DockStyle.Top, Text = "Kuka olet?") 
      let namefield = new TextBox(Dock = DockStyle.Top);
@@ -55,16 +55,18 @@ module M1_MitaJaMiksiFSharp =
      form.Controls.AddRange [|hello; namefield; question|]
      form.Show()
 
-     // Interactiven sisällä voi muokata luotu lomaketta
+     // F# interactiven sisällä voi muokata luotu lomaketta "lennossa".
      let beep () = for i = 0 to 5 do System.Console.Beep()
      namefield.KeyUp.Add(fun e-> hello.Text <- match namefield.Text with | "" -> "" | "test" | "Test" -> beep (); "Syötä oikea nimi!" | text -> "Hello, " + text + "!")
 
 module M2_TunnisteetJaLiteraalit = 
     (*
     2. Tunnisteet, primitiivityypit ja literaalit
+
+    Teemat:
      - let
+     - literaalit
      - vahvatyypistys
-     - F# interactive
     *)
 
     // F# tunnisteet esitellään let-avainsanalla, tunnisteet tyypin näkee viemällä hiiren kursori nimen päälle
@@ -75,20 +77,21 @@ module M2_TunnisteetJaLiteraalit =
     let list = [1;2;3]
     let array = [|1;2;3|]
     let tupple = (1,2,3)
-    System.Console.Beep ()
 
     // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla
     // = merkki tarkoittaa yhtäsuuruutta aina paitsi asetettaessa tunnisteeseen arvo. Muuttujaan sijoitus tapahtuu <- operaattorilla
     x = 1 // palauttaa arvon true. x:n arvo ei muutu.
     let mutable z = 1
     z = 1 // true
-    z <- 2 
+
+    // Muuttujan arvon muuttamiseen käytetään '<-' operaatoria. =-operaattori käyttäytyy kutakuinkin niin kuin matemaatikko voisin sen olettaa 
+    // käyttäytyvän: Aino tapaus jossa sitä käytetään arvon asettamiseen on tunnisteen esittely aina muulloin = tarkoittaa yhtä suuruus vertailua.
+    // F#:ssa ei ole ==-operaattoria, mikä saattaa hämmentää C#- ja Java-koodaajaa. 
+    z <- 2  
     z = 1 // false, koska arvo on nyt 2
 
-
-
     // Interaktiven tulosvirtaan voi kirjoittaa komennolla printf printfn (jälkimmäinen kirjoittaa perään rivin vaihdon).
-    // printtaus metodi tekee tyyppi tarkastuksen
+    // printtaus metodi tekee tyyppitarkastuksen
     // %d = kokonaisluku
     // %f = liukuluko
     // %s = merkkojono
@@ -99,6 +102,8 @@ module M2_TunnisteetJaLiteraalit =
 module M3_Funktiot = 
     (*
     3. Funktiot
+
+    Teemat
      - funtiot ovat ensimmäisen luokan kansalaisia
      - currying
      - rekursio
@@ -110,7 +115,8 @@ module M3_Funktiot =
     plus 1 2
 
     // Yksi kiinnostavimmista ominaisuksista on funktioiden ketjutus
-    // Idean hahmottaa helpoten sulkeistamlla. Kun ensimmäisen int:n korvaa 5:llä fyypiksi (func 5)->int->int.
+    // Idean hahmottaa helpoten sulkeistamlla. Kun ensimmäisen int:n korvaa 5:llä fyypiksi int->int (itse mielessäni usein sulkeistan tähän malliin int->(int->(int)). 
+    // Kun sijoitan ensimmäisen "slottiin" numeron 5 (5->(int->(int)), saan funktion int->int kuin sijoitan seuraavan slottiin 5 saan kokonailuvun int.
     let lisää_viiteen = plus 5
 
     // Sijoittamalla ensimmäiseksi arvoksi 5 funktioon tyyppiä int->int, jäljelle jää int, joka itse asiassa saadaan suorittamalla funktio loppuun asti.
@@ -132,6 +138,9 @@ module M3_Funktiot =
     // ei ole enää mitään tekemistä.
     let rec factorialPlusNonTail (x:int64) = 
         if(x > 1L) then
+            // rekursiivisen kutsun jälkeen pitää lisätä sen palauttama 
+            // arvo x:än ja sitten vasta palatetaan arvo. Koska yhteenlasku tapahtuu rekursiivisen 
+            // kutsun palautettua arvon, kyseessä ei ole häntärekursio.
             x + (factorialPlusNonTail (x - 1L))
         else x
     factorialPlusNonTail  5L // 5 + 4 + 3 + 2 + 1 = 15
@@ -166,8 +175,8 @@ module M4_PatternMatchin =
     resolveQuartile (1,-2)
     resolveQuartile (-1,-2)
 
-    //  F# Pattern matching tukee kymmenkuntaa eri "hahmontunnistus-kaavaa". Esimerkiksi parametrina annettun objektin tyyppi.
-    // Esimerkki 1
+    // F# Pattern matching tukee kymmenkuntaa eri "hahmontunnistus-kaavaa". Esimerkiksi parametrina annettun objektin tyyppi.
+    // Esimerkki 2:
     let format (o: obj) =
         match o with
         | :? System.DateTime as day -> "Päivämäärä: " + day.ToString("dd.MM")
@@ -185,12 +194,16 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     - Vaihtoehdot luokille ja rajapinnoille
         - Tietue tyyppi (Record type)
         - Jäsennetty yhdiste (Discriminate union) ja Pattern matching
-        - Object expression
+        - Objekti ilmaukset (Object expression)
     *)
 
-    // F# on täysiverinen objekti orientoitunut ohjelmointi kieli, 
-    // joskin sen rakenteet kannustavat hyödyntämään muunlaisia rakenteita
-    // luokka. F# ei tee.
+    // F# on täysiverinen olio orientoitunut ohjelmointi kieli, joskin sen rakenteet kannustavat hyödyntämään muunlaisia 
+    // rakenteita luokkia ja rajapintoja. Itse asiassa luokat ja rajapinnat eivät välttämättä ole edes paras mahdollinen 
+    // lähtökohta uudelleenkäytettävälle ja elegantille olio-orientoitunutta koodille.
+
+    // Alla oleva esimerkki havainnollistaa kuinka kuinka klassinen validointi dekoraattori on mahdollista toteuttaa olio 
+    // orientoituneesta käyttäen luokkia ja rajapintoja ja suunnilleen yhtä olio-orientoituneesti käyttämättä suoranaisesti 
+    // kumpaakaan em. rakenteista.
 
     // Luodaan ensin vertailun vuoksi validointi logiikka OOP paradigman mukaisesti hyödyntäen rajapintoja ja luokkia.
     type IValidateInt = 
@@ -216,6 +229,7 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     // Rajanpinnan käyttö tekee rakenteesta asteen joustavammat, mutta koodia pahaisen ominaisuuden määrittylyyn 
     // tarvitsee kirjoittaa enemmän kuin itse sovellus logiikkan monimutkaisuus soisi. 
     // F# jäsennelty unioni (discrimate union) tuo ratkaisun tähän. Oheinen ratkaisu on huomattavist monipuolisempi mutta ei juurikaan monimutkaisempi tai pidempi.
+    // Tarkasti ottaen jäsennelty unioni kääntyy abstraktiksi luokaksi, jolla on sen itsensä periviä sisäluokkia. Perinteisesti ymmärrettynä se ei ole luokka vaan jotain muuta.
     type ValidateInt =
         | GreaterThan of int
         | LessThan of int
@@ -278,27 +292,27 @@ module M6_LoopitJaListaOperaatiot =
      - Seq ja List -operaatiot
     *)
 
-    // F# sallii klassiseten ohjelmointi kielten for loopit
+    // Klassinen for loopi toimii näin:
     let simpleList = [1;2;3]
     for i in simpleList  do
         printfn "Jee %d" i
 
     // Usein for loopeja tehokkaampaa ja elegantimpaa on putkittaa komentoja. |> operaattorilla
     // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin selvennä juurikaan koodia.)
-    list |> List.iter (printfn "Jee %d") 
+    simpleList |> List.iter (printfn "Jee %d") 
 
-    // For looppi sopii parhaiten listojen generointiin
+    // For looppi voi käyttää listojen generointiin. 
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
-    let year2012 = seq {for i in 0.0 .. 356.0 -> firstday2012.AddDays(i)}
+    let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
 
     // Kun loopin logiikka monimutkaistuu, komentojen putkitus alkaa selkeyttämään koodia enevässä määrin.
-    // Funktionaalinen ohjelmointi paradikma on vahvimmillaan nimen omaan monimutkaisten ongelmian kanssa.
+    // Funktionaalinen ohjelmointiparadigma on vahvimmillaan nimenomaan monimutkaisten ongelmien parissa puuhatessa.
     year2012 
     |> Seq.filter (fun day -> day.DayOfWeek = DayOfWeek.Friday && day.Day = 13)
     |> Seq.iter (printfn "%O")
 
-    // Tai jotain vielä villinpään näytä perjantait ja milloin vastaava päivämäärä on perjantai seuraavan kerran.
+    // Suraavassa esimerkissä näytetään tämän vuoden perjantai 13. -päivät ja milloin vastaava päivämäärä on perjantai seuraavan kerran.
     let rec findNextSameFriday13 (day : DateTime) =
         let next = new DateTime(day.Year + 1, day.Month, day.Day)
         match next.DayOfWeek with
@@ -310,7 +324,7 @@ module M6_LoopitJaListaOperaatiot =
     |> Seq.map (fun day -> (day, findNextSameFriday13 day))
     |> Seq.iter(fun (day2012, dayN) ->  (printfn "%O on seuraavan kerran perjantai 13. vuonna %d" day2012 dayN.Year))
 
-    // F# sallii äärettömät sekvuvenssit. Seuraava funktio etsii ensimäisen perjantaina joka on kolmastoista päivä ja jolle 
+    // F# sallii äärettömät sekvenssit. Seuraava funktio etsii ensimäisen perjantaina joka on kolmastoista päivä ja jolle 
     // vuosi * kuukaus * päivä on suurempi kuin 1 000 000. Esim. jos 13.12.2012 olisi perjantai vuoden, kuukauden ja päivän tulo olisi 313872
 
     // 1. Ensin koodia selventävä apufunktio seuraavan kolmannentoista päivän hakemiseen. 
