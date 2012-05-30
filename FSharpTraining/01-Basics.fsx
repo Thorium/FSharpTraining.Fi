@@ -16,13 +16,13 @@ module M1_HelloFSharp =
         - C:n suorituskykyprofiili, eli vain hieman (=selvästi alle kymmenen kertaa) hitaampi kuin hyvin optimoitu C-koodi ja siten suunnilleen 
               yhtä tehokas kuin Java ja C#. Dynaamiset, skriptikielet (kuten PHP, Python, ja Ruby) ovat 10-1000-kertaa optimoitua C-koodia hitaampia.
               Ero korostuu laskentaintensiivisissä tehtävissä.
-        - Kaikki .NET frameworkin luokkakirjastot ovat käytetävissä. F# on .NET-kieli ja kääntyy CIL:ksi (kuten C# ja VB.NET; CIL = Common intermediate language, 
+        - Kaikki .NET-frameworkin luokkakirjastot ovat käytettävissä. F# on .NET-kieli ja kääntyy CIL:ksi (kuten C# ja VB.NET; CIL = Common intermediate language, 
               AKA Microsoft Intermediate lanuguage (MSIL)).
 
     Missä? 
         - F# soveltuu parhaiten Business logiikan ja datan käsittelyn toteuttamiseen. (Ks. Don Symen esitys F# 3.0: data, services, Web, cloud, at your fingertips 
           http://channel9.msdn.com/Events/BUILD/BUILD2011/SAC-904T)
-        - F#:lla voi totettaa myös käyttöliittymäkerroksen ja tiedonesityskerroksen. WebSharper on kiinnostava esimerkki siitä, kuinka käyttöliittymän voi toteuttaa 
+        - F#:lla voi toteuttaa myös käyttöliittymäkerroksen ja tiedonesityskerroksen. WebSharper on kiinnostava esimerkki siitä, kuinka käyttöliittymän voi toteuttaa 
           funktionaalisen ohjelmointi padigman hengessä (http://websharper.com/home).
      
      Esimerkki koodi?
@@ -34,7 +34,7 @@ module M1_HelloFSharp =
      *)
      System.Console.Beep ()
 
-     // Alla oleva merkkijono tulostuu F# interaktiven tulosjonoon muoduossa: 
+     // Alla oleva merkkijono tulostuu F# interaktiven tulosjonoon muodossa: 
      // val it : string = "Hello world"'
      "Hello world"
 
@@ -70,7 +70,7 @@ module M2_TunnisteetJaLiteraalit =
     *)
 
     // F# tunnisteet esitellään let-avainsanalla, tunnisteet tyypin näkee viemällä hiiren kursori nimen päälle
-    // Koodin suurittaminen tapahtuu maalaamalla teksti ja painamalla alt+enter. (Valikoiden kautta saa aikaan saman.)
+    // Koodin suorittaminen tapahtuu maalaamalla teksti ja painamalla alt+enter. (Valikoiden kautta saa aikaan saman.)
     let x = 1 
     let y = 1.0 
     let str = "merkkijono"
@@ -93,8 +93,8 @@ module M2_TunnisteetJaLiteraalit =
     // Interaktiven tulosvirtaan voi kirjoittaa komennolla printf printfn (jälkimmäinen kirjoittaa perään rivin vaihdon).
     // printtaus metodi tekee tyyppitarkastuksen
     // %d = kokonaisluku
-    // %f = liukuluko
-    // %s = merkkojono
+    // %f = liukuluku
+    // %s = merkkijono
     // %O = objekti 
     // %A = taulukko"
     printfn "%d %f %s %O %A" x y str list array 
@@ -104,7 +104,7 @@ module M3_Funktiot =
     3. Funktiot
 
     Teemat
-     - funtiot ovat ensimmäisen luokan kansalaisia
+     - funktiot ovat ensimmäisen luokan kansalaisia
      - currying
      - rekursio
     *)
@@ -114,16 +114,16 @@ module M3_Funktiot =
     let plus x y = x + y
     plus 1 2
 
-    // Yksi kiinnostavimmista ominaisuksista on funktioiden ketjutus
-    // Idean hahmottaa helpoten sulkeistamlla. Kun ensimmäisen int:n korvaa 5:llä fyypiksi int->int (itse mielessäni usein sulkeistan tähän malliin int->(int->(int)). 
-    // Kun sijoitan ensimmäisen "slottiin" numeron 5 (5->(int->(int)), saan funktion int->int kuin sijoitan seuraavan slottiin 5 saan kokonailuvun int.
+    // Yksi kiinnostavimmista ominaisuuksista on funktioiden ketjutus
+    // Idean hahmottaa helpoiten sulkeistamalla. Kun ensimmäisen int:n korvaa 5:llä tyypiksi int->int (itse mielessäni usein sulkeistan tähän malliin int->(int->(int)). 
+    // Kun sijoitan ensimmäisen "slottiin" numeron 5 (5->(int->(int)), saan funktion int->int kuin sijoitan seuraavan slottiin 5 saan kokonaisluvun int.
     let lisää_viiteen = plus 5
 
     // Sijoittamalla ensimmäiseksi arvoksi 5 funktioon tyyppiä int->int, jäljelle jää int, joka itse asiassa saadaan suorittamalla funktio loppuun asti.
     lisää_viiteen 5
 
     // Rekursiivisen function esittelyyn pitää lisätä rec (mahdollisesti pitkälti F# REPL kääntäjän takia). Rekursiolla ei ole vaikutusta funktion tyyppiin.
-    // Huomaa funktion voi määritellä myös toisen funkion sisään. Rekursiivisten functioden osalta tämä on näppärä sääntö.
+    // Huomaa funktion voi määritellä myös toisen funktion sisään. Rekursiivisten functioden osalta tämä on näppärä sääntö.
     let rec factorialPlus x =
         let rec factorialRec (x:int64) acc =
             if x > 1L then factorialRec (x - 1L) (x + acc)
@@ -139,7 +139,7 @@ module M3_Funktiot =
     let rec factorialPlusNonTail (x:int64) = 
         if(x > 1L) then
             // rekursiivisen kutsun jälkeen pitää lisätä sen palauttama 
-            // arvo x:än ja sitten vasta palatetaan arvo. Koska yhteenlasku tapahtuu rekursiivisen 
+            // arvo x:än ja sitten vasta palautetaan arvo. Koska yhteenlasku tapahtuu rekursiivisen 
             // kutsun palautettua arvon, kyseessä ei ole häntärekursio.
             x + (factorialPlusNonTail (x - 1L))
         else x
@@ -150,7 +150,7 @@ module M4_PatternMatchin =
     (*
     4. Pattern matching vaihtoehtona if-elselle 
      - swich case rakenne tehtynä oikein
-     - F#:ssa erittäin ilmoisuvoimainen rakenne
+     - F#:ssa erittäin ilmaisuvoimainen rakenne
      - http://msdn.microsoft.com/en-us/library/dd547125.aspx
     *)
 
@@ -175,7 +175,7 @@ module M4_PatternMatchin =
     resolveQuartile (1,-2)
     resolveQuartile (-1,-2)
 
-    // F# Pattern matching tukee kymmenkuntaa eri "hahmontunnistus-kaavaa". Esimerkiksi parametrina annettun objektin tyyppi.
+    // F# Pattern matching tukee kymmenkuntaa eri "hahmontunnistus-kaavaa". Esimerkiksi parametrina annetun objektin tyyppi.
     // Esimerkki 2:
     let format (o: obj) =
         match o with
@@ -201,7 +201,7 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     // rakenteita luokkia ja rajapintoja. Itse asiassa luokat ja rajapinnat eivät välttämättä ole edes paras mahdollinen 
     // lähtökohta uudelleenkäytettävälle ja elegantille olio-orientoitunutta koodille.
 
-    // Alla oleva esimerkki havainnollistaa kuinka kuinka klassinen validointi dekoraattori on mahdollista toteuttaa olio 
+    // Alla oleva esimerkki havainnollistaa kuinka klassinen validointi dekoraattori on mahdollista toteuttaa olio 
     // orientoituneesta käyttäen luokkia ja rajapintoja ja suunnilleen yhtä olio-orientoituneesti käyttämättä suoranaisesti 
     // kumpaakaan em. rakenteista.
 
@@ -226,9 +226,9 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     moreThan5Validator.Validate 2 // false
     moreThan5Validator.Validate 8 // true
 
-    // Rajanpinnan käyttö tekee rakenteesta asteen joustavammat, mutta koodia pahaisen ominaisuuden määrittylyyn 
+    // Rajanpinnan käyttö tekee rakenteesta asteen joustavammat, mutta koodia pahaisen ominaisuuden määrittelyyn 
     // tarvitsee kirjoittaa enemmän kuin itse sovellus logiikkan monimutkaisuus soisi. 
-    // F# jäsennelty unioni (discrimate union) tuo ratkaisun tähän. Oheinen ratkaisu on huomattavist monipuolisempi mutta ei juurikaan monimutkaisempi tai pidempi.
+    // F# jäsennelty unioni (discrimate union) tuo ratkaisun tähän. Oheinen ratkaisu on huomattavasti monipuolisempi mutta ei juurikaan monimutkaisempi tai pidempi.
     // Tarkasti ottaen jäsennelty unioni kääntyy abstraktiksi luokaksi, jolla on sen itsensä periviä sisäluokkia. Perinteisesti ymmärrettynä se ei ole luokka vaan jotain muuta.
     type ValidateInt =
         | GreaterThan of int
@@ -262,12 +262,12 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     complexValidator1.Validate 12 // true
 
     // Ratkaisu toimii mutta syntaksin edellyttämä sulkuhässäkästä on erittäin vaikea lukuinen.
-    // F# sallii luettavuutta helpottavien prefix ja infiksi opreattootien luonnin.
+    // F# sallii luettavuutta helpottavien prefix ja infiksi operaattorien luonnin.
     // Harmittavasti CLI (Common Language Infrastructure) ei anna määrittää && tai || operaattoreja 
     // jotka palauttavat jotain muuta kuin booleanin. +& ja +| ovat hieman kryptisiä nimiä. 
 
     // On myös syytä huomata että F# sallii luokan määrittämisen ja laajentamisen partiaalisesti jopa sen jälkeen 
-    // kun siitä on luotu instansseja. Tässä ValidateInt luokkaa laajennetaan "lennosta" kahdella staatisella jäsenellä.
+    // kun siitä on luotu instansseja. Tässä ValidateInt luokkaa laajennetaan "lennosta" kahdella staattisella jäsenellä.
     // Koodi on kuitenkin edelleen vahvasti tyypitettyä, sillä tätä tyyppi laajennusta ei hyödynnetä tätä ennen.
     type ValidateInt with
         static member (+&) (fst:ValidateInt, snd : ValidateInt) =
@@ -312,7 +312,7 @@ module M6_LoopitJaListaOperaatiot =
     |> Seq.filter (fun day -> day.DayOfWeek = DayOfWeek.Friday && day.Day = 13)
     |> Seq.iter (printfn "%O")
 
-    // Suraavassa esimerkissä näytetään tämän vuoden perjantai 13. -päivät ja milloin vastaava päivämäärä on perjantai seuraavan kerran.
+    // Seuraavassa esimerkissä näytetään tämän vuoden perjantai 13. -päivät ja milloin vastaava päivämäärä on perjantai seuraavan kerran.
     let rec findNextSameFriday13 (day : DateTime) =
         let next = new DateTime(day.Year + 1, day.Month, day.Day)
         match next.DayOfWeek with
@@ -324,8 +324,8 @@ module M6_LoopitJaListaOperaatiot =
     |> Seq.map (fun day -> (day, findNextSameFriday13 day))
     |> Seq.iter(fun (day2012, dayN) ->  (printfn "%O on seuraavan kerran perjantai 13. vuonna %d" day2012 dayN.Year))
 
-    // F# sallii äärettömät sekvenssit. Seuraava funktio etsii ensimäisen perjantaina joka on kolmastoista päivä ja jolle 
-    // vuosi * kuukaus * päivä on suurempi kuin 1 000 000. Esim. jos 13.12.2012 olisi perjantai vuoden, kuukauden ja päivän tulo olisi 313872
+    // F# sallii äärettömät sekvenssit. Seuraava funktio etsii ensimmäisen perjantaina joka on kolmastoista päivä ja jolle 
+    // vuosi * kuukausi * päivä on suurempi kuin 1 000 000. Esim. jos 13.12.2012 olisi perjantai vuoden, kuukauden ja päivän tulo olisi 313872
 
     // 1. Ensin koodia selventävä apufunktio seuraavan kolmannentoista päivän hakemiseen. 
     let rec findNextFriday (day : DateTime) =

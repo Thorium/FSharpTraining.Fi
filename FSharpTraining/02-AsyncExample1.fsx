@@ -14,9 +14,9 @@ module HttpListenerHelpers =
     open System.Threading
     open System.Collections.Generic
 
-    // Alla HttpListener ja WebClient luokkiin laajenentaan tuki F#:n Async tyypille. 
+    // Alla HttpListener ja WebClient luokkiin laajennetaan tuki F#:n Async tyypille. 
     //
-    // Näistä WebClient luokan laajennus on vaikea selkoisempi. Olennaisesti Async.FromContinuations 
+    // Näistä WebClient luokan laajennus on vaikeaselkoisempi. Olennaisesti Async.FromContinuations 
     // tuottaa Async-luokasta sellaisen instanssin joka kuuntelee kolmea asynkronista tapahtumaa:
     // - Tuli vastaus yritykseen ladata url. Ei ongelmia.
     // - Jotain meni pieleen.
@@ -25,7 +25,7 @@ module HttpListenerHelpers =
     // Async-luokka toimii eräänlaisena proxynä WebClientin DownloadDataComplited tapahtumille. 
     //
     // Ensimmäisessä tapauksessa luodaan Async proxy HttpListenerin BeginGetContext ja EndGetContext delegaatille. 
-    // Käytännössä tämä sallii sivukyselyn käsittelyn syncronisesti ja vastuksen kirjoittamisen HttpResponsen 
+    // Käytännössä tämä sallii sivukyselyn käsittelyn synkronisesti ja vastuksen kirjoittamisen HttpResponsen 
     // tulostevirtaan kunhan sellainen WebClientilta saapuu (ks. HttpListenerin StartMetodi).
     type System.Net.HttpListener with
         member x.AsyncGetContext() = 
@@ -40,15 +40,15 @@ module HttpListenerHelpers =
                     else cont res.Result)
                 x.DownloadDataAsync(uri) )
 
-    // C#:n extension metodeilla pystyy laajentmaan luokalle vain instanssin metodeja muttei ei staattisia metodeja. F#:ssa ei ole tätä rajoitusta.
+    // C#:n extension metodeilla pystyy laajentamaan luokalle vain instanssin metodeja muttei ei staattisia metodeja. F#:ssa ei ole tätä rajoitusta.
     type System.Net.HttpListener with 
         static member Start(url, f) = 
             let tokenSource = new CancellationTokenSource()
             
-            // Asycn Start käynnistää uuden säikee. Säikeen sisällä käynnistetään http liikenteen kuuntelija parametrina annettuun osoitteeseen.
+            // Asycn Start käynnistää uuden säikeen. Säikeen sisällä käynnistetään http liikenteen kuuntelija parametrina annettuun osoitteeseen.
             //
             // Huomaa. Async on täysin eri asia kuin async-avainsana ja siihen liittyvä AsyncBuilder luokka. Async-luokka sisältää logiikan laskennan
-            // suorittamiseen asynkronisesti. AsyncBuilderilla taas luodaan asynkronisisa työnkulkuja (hyödyntäen Async-objekteja). Siten se on 
+            // suorittamiseen asynkronisesti. AsyncBuilderilla taas luodaan asynkronisissa työnkulkuja (hyödyntäen Async-objekteja). Siten se on 
             // abstraktio tasoltaan asteen Asyncin yläpuolella.
             Async.Start
                 ((async { 
@@ -56,8 +56,8 @@ module HttpListenerHelpers =
                     listener.Prefixes.Add(url)
                     listener.Start()
                     // Tässä odotetaan loopissa niin pitkään että tulee kysely. "let! context = " blokkaa etenemisen loopissa (tietenkään blokkaamatta koko sovellusta).
-                    // Kun kyseyly lopulta saapuu, se passataan saman tein toiseen säikeeseen käsiteltäväksi ja pyörähdetään odottamaan seuraavaa kyselyä.
-                    // Kannattaa huomata, että tässä tapaumien kuuntelu ja kirjaaminen kuuntavaksi määritetään olemattomalla määärällä koodia. 
+                    // Kun kysely lopulta saapuu, se passataan saman tein toiseen säikeeseen käsiteltäväksi ja pyörähdetään odottamaan seuraavaa kyselyä.
+                    // Kannattaa huomata, että tässä tapahtumien kuuntelu ja kirjaaminen kuuntavaksi määritetään olemattomalla määrällä koodia. 
                     // AsyncGetContext() "putkittaa" HttpListener luokan BeginGetContext ja EndGetContext tapahtumat AsyncBuilder luokalle. 
                     
                     // "let!" on syntaktista sokeria, joka kääntyy tässä AsyncBuilder-instanssin Bind -metodi kutsuksi seuraavaan tapaan:
@@ -89,7 +89,7 @@ module ASyncLister =
     let getProxyUrl (ctx:HttpListenerContext) = 
         Uri(mirrorRoot + ctx.Request.Url.PathAndQuery)
     
-    // Funktio käsittelee poikkeukset asyncronisesti
+    // Funktio käsittelee poikkeukset asynkronisesti
     // Tämä funktio kääntyy muotoon 
     // [1] AsyncBuilder.Delay(fun () -> 
     //    use wr = new StreamWriter(ctx.Response.OutputStream)
@@ -108,15 +108,15 @@ module ASyncLister =
        wr.Write("<p>" + e.Message + "</p>")
        ctx.Response.Close() }
 
-    // AsyncBuilder mahdollistaa asynkronisten opreatioitioiden putkittamisen 
+    // AsyncBuilder mahdollistaa asynkronisten operaatioiden putkittamisen 
     // minimi määrällä pään rapsutusta. Tässä kokonaisuudessa putkitetaan kolme
     // asynkronista operaatiota. 
     // 1) Sivu pyyntö tulee kun on tullakseen. Kun ase tulee aloitetaan tämän koodi blokin suoritus.
-    // 2) Ladataan asynrkonisesti data verkosta.
-    // 3a) kun lataus byte[] on käytetävissä kirjoitetaan data asynknoisesti kuunneltavan konteksin 
+    // 2) Ladataan asynkronisesti data verkosta.
+    // 3a) kun lataus byte[] on käytettävissä kirjoitetaan data asynkronisesti kuunneltavan kontekstin 
     // tulostevirtaan 
     // 3b) jos homma meni kaikki meni pieleen niin kirjoitetaan virhe ja tuli poikkeus. Kirjoitetaan virhe tulosvirtaan.
-    // "let! data = [...]" ja "do! ctx.Response.OutputStream.AsyncWrite(data)" putkittaa opreaatio automaattisesti siten että 
+    // "let! data = [...]" ja "do! ctx.Response.OutputStream.AsyncWrite(data)" putkittaa operaatio automaattisesti siten että 
     // jälkimmäinen suoritetaan vasta kun ensimmäinen palauttaa arvon. Sovellus ei jää odottamaan että näin tapahtuu.
     // saman voisi toteuttaa myös ilman syntaktista sokeria ja lopputulos näyttäisi tämän tapaiselta.
     // [...]
@@ -129,8 +129,8 @@ module ASyncLister =
     //    catch e -> 
     //         async.Bind(asyncHandleError ctx e, async1.Return()
     //
-    // F#:n async-laskentailmaus (computational expression) tekee asynknonisesta ohjelmoinnista huomattavasti 
-    // helpompaa kuin mitä olisi monilla muilla kielillä tekemällä asynkronisesti suoritettavasta koodista huomattaasti 
+    // F#:n async-laskentailmaus (computational expression) tekee asynkronisesta ohjelmoinnista huomattavasti 
+    // helpompaa kuin mitä olisi monilla muilla kielillä tekemällä asynkronisesti suoritettavasta koodista huomattavasti 
     // helppolukuisempaa ja tiiviimpää.
     let asyncHandleRequest (ctx:HttpListenerContext) = async {
         let wc = new WebClient()
@@ -140,8 +140,8 @@ module ASyncLister =
         with e ->
             do! asyncHandleError ctx e }
 
-    /// Tämä käynnistää http liikenteen kuuntelijan. Muista sulkea se funtionalla Stop. Toista kuuntelijaa ei voi käynnistää samaan porttiin. 
-    /// (Asiaan mitenkään liittymättä kolmea kauttaviivaa '///' voi käyttää metodejen dokumentoimiseen. Kun hiiren vie alla olevan metodin päälle näkee tämän rivin.)
+    /// Tämä käynnistää http liikenteen kuuntelijan. Muista sulkea se funktiolla Stop. Toista kuuntelijaa ei voi käynnistää samaan porttiin. 
+    /// (Asiaan mitenkään liittymättä kolmea kauttaviivaa '///' voi käyttää metodien dokumentoimiseen. Kun hiiren vie alla olevan metodin päälle näkee tämän rivin.)
     let StartMirroring (url) =
         mirrorRoot <- url
         token <- HttpListener.Start("http://localhost:8080/", asyncHandleRequest)
