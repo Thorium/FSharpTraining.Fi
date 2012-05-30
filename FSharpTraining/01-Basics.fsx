@@ -4,28 +4,32 @@ module M1_HelloFSharp =
      1. Mikä on F# ja miksi käyttäisin sitä?
 
     Mitä F# on?
-        * F#  on multiparadigma ohjelmointi kieli, jonka painopiste on funktionaalisessa ohjelmointi paradigmassa.
+        * F#  on multiparadigma-ohjelmointikieli, jonka painopiste on funktionaalisessa ohjelmointiparadigmassa.
         * Yksi kolmesta Visual Studion mukana tulevista kielistä.
     
     Miksi?
         - F# on ilmaisuvoimainen ja syntaksiltaan tiivis kieli. 
             * Vaikka F# vahvasti tyypitetty kieli, sen monet rakenteet muistuttavat keveydessään dynaamisesti tyypitettyjä skripti kieliä (kuten Python ja Ruby).
-            * F# koodin rivimäärä on usein 2-5 alhaisempi kuin vastaavan C#-ratkaisun. Koodin luettavuus on samaa tasoa kuin C# tai Jave koodin - joskin eri asiat ovat 
+            * F# koodin rivimäärä on usein 2-5 alhaisempi kuin vastaavan C#-ratkaisun. Koodin luettavuus on samaa tasoa kuin C#- tai Java-koodin - joskin eri asiat ovat 
               helppolukuisia/helppolukuisia. F#:ssa on enemmän kryptisiä lynenteitä ja operaattoreja, siinä missä Javassa ja C#:ssa on enemmän avainsanoja ja idiomeja 
-              muistavaksi.
-        - C:n suorituskykyprofiili, eli vain hieman (=selvästi alle kymmenen kertaa) hitaampi kuin hyvin optimoitu C-koodi ja siten suunnilleen 
+              muistavaksi. (lukijan näkemys)
+            * F# on abstraktiotasoltaan korkeampi kieli kuin C#. Vastaavasti kuin C# on abstraktiotasoltaan korkeampi kieli kuin CIL/assembler.
+            * F# ohjaa oletuksena sivuvaikutuksettomaan koodaukseen. Muutoinkin F# antaa huomattavasti näkemystä siitä *miksi* tehdä asioita myös 
+              muissa kielissä jollain tavalla. 
+            * Interactive-ympäristön (REPL-loop) avulla kehittäjä pääsee keskittymään ongelman ytimeen samalla kun testaa koodiaan.
+        - C:n suorituskykyprofiili, eli vain hieman (=selvästi alle kymmenen kertaa) hitaampi kuin hyvin optimoitu C-koodi, siten suunnilleen 
               yhtä tehokas kuin Java ja C#. Dynaamiset, skriptikielet (kuten PHP, Python, ja Ruby) ovat 10-1000-kertaa optimoitua C-koodia hitaampia.
               Ero korostuu laskentaintensiivisissä tehtävissä.
         - Kaikki .NET-frameworkin luokkakirjastot ovat käytettävissä. F# on .NET-kieli ja kääntyy CIL:ksi (kuten C# ja VB.NET; CIL = Common intermediate language, 
               AKA Microsoft Intermediate lanuguage (MSIL)).
 
     Missä? 
-        - F# soveltuu parhaiten Business logiikan ja datan käsittelyn toteuttamiseen. (Ks. Don Symen esitys F# 3.0: data, services, Web, cloud, at your fingertips 
+        - F# soveltuu parhaiten Business-logiikan ja datankäsittelyn toteuttamiseen. (Ks. Don Symen esitys F# 3.0: data, services, Web, cloud, at your fingertips 
           http://channel9.msdn.com/Events/BUILD/BUILD2011/SAC-904T)
         - F#:lla voi toteuttaa myös käyttöliittymäkerroksen ja tiedonesityskerroksen. WebSharper on kiinnostava esimerkki siitä, kuinka käyttöliittymän voi toteuttaa 
           funktionaalisen ohjelmointi padigman hengessä (http://websharper.com/home).
      
-     Esimerkki koodi?
+     Esimerkki-koodi?
 
      Helpoin tapa suorittaa alla oleva koodi ja katsoa mitä tapahtuu on mennä ensimmäselle koodi riville ja painaa Alt-ä 
      (Jos maalaat ja suoritat koodin (alt-enter), ota rivien alut mukaan, sillä sisennyksellä on F#:ssa oletuksena merkitystä).
@@ -34,7 +38,7 @@ module M1_HelloFSharp =
      *)
      System.Console.Beep ()
 
-     // Alla oleva merkkijono tulostuu F# interaktiven tulosjonoon muodossa: 
+     // Alla oleva merkkijono tulostuu F#-interaktiven tulosjonoon muodossa: 
      // val it : string = "Hello world"'
      "Hello world"
 
@@ -47,13 +51,13 @@ module M1_HelloFSharp =
 
      
      // Klassinen "Hello, nimi!" muunnos Hello Worldista.
-     let form = new Form()
+     let form2 = new Form()
      let question = new Label(Dock = DockStyle.Top, Text = "Kuka olet?") 
      let namefield = new TextBox(Dock = DockStyle.Top);
      let hello = new Label(Dock = DockStyle.Top); 
-     namefield.KeyUp.Add(fun e-> hello.Text <- match namefield.Text with | "" -> "" | text -> "Hello, " + text + "!")
-     form.Controls.AddRange [|hello; namefield; question|]
-     form.Show()
+     namefield.KeyUp.Add(fun e-> hello.Text <- match namefield.Text with "" -> "" | text -> "Hello, " + text + "!")
+     form2.Controls.AddRange [|hello; namefield; question|]
+     form2.Show()
 
      // F# interactiven sisällä voi muokata luotu lomaketta "lennossa".
      let beep () = for i = 0 to 5 do System.Console.Beep()
@@ -74,18 +78,38 @@ module M2_TunnisteetJaLiteraalit =
     let x = 1 
     let y = 1.0 
     let str = "merkkijono"
-    let list = [1;2;3]
-    let array = [|1;2;3|]
-    let tupple = (1,2,3)
 
-    // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla
+    // Useat muuttujat esitellään eri tavalla kuin C#:ssa:
+    let a, b, c = "a", "b", "c"
+
+    let list = [1;2;3]
+    let array = [|1;2;3|] 
+    // lista on immutable F#-lista, array (tai paremminkin sequence) on .NET yhteensopiva IEnumerable<T>
+
+    // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin tuple on yksi kappale n:ää tyyppiä:
+    let tupple = (1,"a",0.4)
+    
+    // Sulut ovat vapaaehtoisia:
+    let tupple2 = 1,"k"
+    // Ja tuplen voi purkaa kivasti:
+    let eka, toka = tupple2
+    
+    // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia:
+    let ``tämä muuttuja vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
+
+
+    // Oletuksena koodi on sivuvaikutuksetonta "immutable"-koodia. 
+    // Ohjelmistojen bugit johtuvat usein siitä, että jokin muuttuja ei ole siinä tilassa missä oletetaan.
+    // Tämän takia muuttujien käyttöä on syytä välttää. Tee mieluummin uusi vakio.
+
+    // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla 
     // = merkki tarkoittaa yhtäsuuruutta aina paitsi asetettaessa tunnisteeseen arvo. Muuttujaan sijoitus tapahtuu <- operaattorilla
     x = 1 // palauttaa arvon true. x:n arvo ei muutu.
     let mutable z = 1
     z = 1 // true
 
     // Muuttujan arvon muuttamiseen käytetään '<-' operaatoria. =-operaattori käyttäytyy kutakuinkin niin kuin matemaatikko voisin sen olettaa 
-    // käyttäytyvän: Aino tapaus jossa sitä käytetään arvon asettamiseen on tunnisteen esittely aina muulloin = tarkoittaa yhtä suuruus vertailua.
+    // käyttäytyvän: Aino tapaus jossa sitä käytetään arvon asettamiseen on tunnisteen esittely. Aina muulloin = tarkoittaa yhtä suuruus vertailua.
     // F#:ssa ei ole ==-operaattoria, mikä saattaa hämmentää C#- ja Java-koodaajaa. 
     z <- 2  
     z = 1 // false, koska arvo on nyt 2
@@ -98,6 +122,7 @@ module M2_TunnisteetJaLiteraalit =
     // %O = objekti 
     // %A = taulukko"
     printfn "%d %f %s %O %A" x y str list array 
+    // (tai .NET-perinteisesti System.Console.WriteLine)
 
 module M3_Funktiot = 
     (*
@@ -121,8 +146,18 @@ module M3_Funktiot =
 
     // Sijoittamalla ensimmäiseksi arvoksi 5 funktioon tyyppiä int->int, jäljelle jää int, joka itse asiassa saadaan suorittamalla funktio loppuun asti.
     lisää_viiteen 5
+    lisää_viiteen 7
 
-    // Rekursiivisen function esittelyyn pitää lisätä rec (mahdollisesti pitkälti F# REPL kääntäjän takia). Rekursiolla ei ole vaikutusta funktion tyyppiin.
+    // Tämä on konseptina suurempi abstraktio kuin C# optionaaliset parametrit, ja mahdollistaa paremman laiskan evaluoinnin.
+    
+
+    // Rekursiivisen function esittelyyn pitää lisätä rec (pitkälti F# vahvan tyypityksen takia): 
+    // Rekursiolla ei ole vaikutusta funktion tyyppiin (eli se ei vaihdu).
+
+    let rec fibs a b = 
+        match a + b with c when c < 10000 -> c :: fibs b c | _ -> [] 
+    let fibonacci = 0::1::(fibs 0 1) 
+
     // Huomaa funktion voi määritellä myös toisen funktion sisään. Rekursiivisten functioden osalta tämä on näppärä sääntö.
     let rec factorialPlus x =
         let rec factorialRec (x:int64) acc =
@@ -155,7 +190,14 @@ module M4_PatternMatchin =
     *)
 
     // Pattern matchingiä voi käyttää samaan tapaan kuin if-else sykliä voisi. 
-    // Lopputulos on usein helppo lukuisempi ja tiiviimpi.
+    // Suoritus vertaa kaikkea ensimmäiseen arvoon, ja palauttaa tuloksena palautuksen _ tarkoittaa "mikä tahansa"
+    let barDay = 
+        match System.DateTime.Now.DayOfWeek with
+        | System.DayOfWeek.Friday -> "bar?"
+        | System.DayOfWeek.Saturday -> "bar!"
+        | loput -> "no bar"
+    
+    // Lopputulos on usein helppo lukuisempi ja tiiviimpi:
     //          |
     //     1    |     2
     //          |
@@ -186,6 +228,13 @@ module M4_PatternMatchin =
     format (System.DateTime.Now)
     format 1
     format 1.0
+
+    //Aktiiviset patternit: Haarautumis-ehto voidaan irrottaa kontekstistaan (vähän kuten Clojure multi-methods ("polyphormism ala carte"):
+    let (|Even|Odd|) input = if input % 2 = 0 then Even else Odd
+    let TestNumber input = match input with Even -> printfn "%d is even" input | Odd -> printfn "%d is odd" input
+    TestNumber 4
+    TestNumber 7
+
 
 module M5_TyypitJaObjektiOrientoitunutOhjelmointi = 
     (*
