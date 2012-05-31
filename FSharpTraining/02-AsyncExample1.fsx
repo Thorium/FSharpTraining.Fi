@@ -1,7 +1,7 @@
 ﻿// namespace FSharpTrainin
 #r "System.Net.dll"
 (* 
-Esimerkki perustuu Tomas Petricekic koodiframenttiin, joka löytyy osoitteesta http://fssnip.net/6e
+Esimerkki perustuu Tomas Petricekic koodifragmenttiin, joka löytyy osoitteesta http://fssnip.net/6e
 
 Esimerkin idea on demonstroida seuraavia ominaisuuksia:
 1) Luokkien laajentaminen ja hyödyntäminen ilman periyttämistä tai muita vastaavia raskaita ratkaisuja. 

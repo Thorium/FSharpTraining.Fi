@@ -5,10 +5,10 @@ module M1_HelloFSharp =
 
     Mitä F# on?
         * F#  on multiparadigma-ohjelmointikieli, jonka painopiste on funktionaalisessa ohjelmointiparadigmassa.
-        * Yksi kolmesta Visual Studion mukana tulevista kielistä.
+        * Yksi kolmesta Visual Studion mukana tulevista kielistä. Se perustuu OCaml-kieleen.
     
     Miksi?
-        - F# on ilmaisuvoimainen ja syntaksiltaan tiivis kieli. 
+        - F# on ilmaisuvoimainen ja syntaksiltaan tiivis kieli.
             * Vaikka F# vahvasti tyypitetty kieli, sen monet rakenteet muistuttavat keveydessään dynaamisesti tyypitettyjä skripti kieliä (kuten Python ja Ruby).
             * F# koodin rivimäärä on usein 2-5 alhaisempi kuin vastaavan C#-ratkaisun. Koodin luettavuus on samaa tasoa kuin C#- tai Java-koodin - joskin eri asiat ovat 
               helppolukuisia/helppolukuisia. F#:ssa on enemmän kryptisiä lynenteitä ja operaattoreja, siinä missä Javassa ja C#:ssa on enemmän avainsanoja ja idiomeja 
@@ -49,7 +49,6 @@ module M1_HelloFSharp =
      form.Controls.Add(new Label(Text = "Hello world!"))
      form.Show()
 
-     
      // Klassinen "Hello, nimi!" muunnos Hello Worldista.
      let form2 = new Form()
      let question = new Label(Dock = DockStyle.Top, Text = "Kuka olet?") 
@@ -85,7 +84,6 @@ module M2_TunnisteetJaLiteraalit =
     let list = [1;2;3]
     let array = [|1;2;3|] 
     // lista on immutable F#-lista, array (tai paremminkin sequence) on .NET yhteensopiva IEnumerable<T>
-<<<<<<< HEAD
 
     // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin tuple on yksi kappale n:ää tyyppiä:
     let tupple = (1,"a",0.4)
@@ -96,24 +94,11 @@ module M2_TunnisteetJaLiteraalit =
     let eka, toka = tupple2
     
     // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia:
-    let ``tämä muuttuja vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
+    let ``tämä vakio vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
 
+    // Funktio ilman parametreja (vs. sulkuja ilman vakio / property):
+    let Action() = 1
 
-=======
-
-    // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin tuple on yksi kappale n:ää tyyppiä:
-    let tupple = (1,"a",0.4)
-    
-    // Sulut ovat vapaaehtoisia:
-    let tupple2 = 1,"k"
-    // Ja tuplen voi purkaa kivasti:
-    let eka, toka = tupple2
-    
-    // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia:
-    let ``tämä muuttuja vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
-
-
->>>>>>> cc13bd166f0bf8d40a32494fa4fb4f6ef9dc3024
     // Oletuksena koodi on sivuvaikutuksetonta "immutable"-koodia. 
     // Ohjelmistojen bugit johtuvat usein siitä, että jokin muuttuja ei ole siinä tilassa missä oletetaan.
     // Tämän takia muuttujien käyttöä on syytä välttää. Tee mieluummin uusi vakio.
@@ -169,12 +154,7 @@ module M3_Funktiot =
 
     // Rekursiivisen function esittelyyn pitää lisätä rec (pitkälti F# vahvan tyypityksen takia): 
     // Rekursiolla ei ole vaikutusta funktion tyyppiin (eli se ei vaihdu).
-
-    let rec fibs a b = 
-        match a + b with c when c < 10000 -> c :: fibs b c | _ -> [] 
-    let fibonacci = 0::1::(fibs 0 1) 
-
-    // Huomaa funktion voi määritellä myös toisen funktion sisään. Rekursiivisten functioden osalta tämä on näppärä sääntö.
+    // Huomaa, että funktion voi määritellä myös toisen funktion sisään. Rekursiivisten functioden osalta tämä on näppärä sääntö.
     let rec factorialPlus x =
         let rec factorialRec (x:int64) acc =
             if x > 1L then factorialRec (x - 1L) (x + acc)
@@ -205,14 +185,7 @@ module M4_PatternMatchin =
      - http://msdn.microsoft.com/en-us/library/dd547125.aspx
     *)
 
-    // Pattern matchingiä voi käyttää samaan tapaan kuin if-else sykliä voisi. 
-    // Suoritus vertaa kaikkea ensimmäiseen arvoon, ja palauttaa tuloksena palautuksen _ tarkoittaa "mikä tahansa"
-    let barDay = 
-        match System.DateTime.Now.DayOfWeek with
-        | System.DayOfWeek.Friday -> "bar?"
-        | System.DayOfWeek.Saturday -> "bar!"
-        | loput -> "no bar"
-    
+    // Pattern matchingiä voi käyttää samaan tapaan kuin if-else sykliä voisi.     
     // Lopputulos on usein helppo lukuisempi ja tiiviimpi:
     //          |
     //     1    |     2
@@ -262,9 +235,74 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
         - Objekti ilmaukset (Object expression)
     *)
 
+    // Kääntäjä tyypittää automaattisesti, 'a -> string on funktio joka ottaa geneerisen tyypin sisään ja palauttaa stringin ulos:
+    let Method1(input) = 
+        input.ToString()
+    //val Method2 : 'a -> string
+    
+    // Yleensä automatiikka toimii hyvin, joten manuaalinen eksplisiittinen tyypitys on usein turhaa.
+    // Joskus silti kääntäjä voi tarvita pientä vinkkiä...
+
+    // Tyypittää voi eksplisiittisesti:
+    let Method2(input:int) :string = 
+        input.ToString()
+    //val Method1 : int -> string
+
+    // Generics:
+    let Method3(input:'t) =
+        input.ToString()
+
+    // Generics .NET-tapaan eksplisiittisesti:
+    let Method4<'t>(input:'t) =
+        input.ToString()
+
+    // Lista-parametri OCaml-tapaan eksplisiittisesti: 
+    let l2 : int list = [1;2;3]
+
+    // Lista-parametri .NET-tapaan eksplisiittisesti:
+    // (syntaksi eri, lopputulos käytännössä sama)
+    let l1 : list<int> = [1;2;3]
+
+    // Generics .NET-tapaan, tyypillä:
+    type myType1<'t> = MyType1 of 't
+
+    // Vastaava Generics OCaml-tapaan:
+    // (syntaksi eri, lopputulos käytännössä sama)
+    type 't myType2 = MyType2 of 't
+
+    // Käyttö:
+    let myThree1 = MyType1("something")
+    let myThree2 = MyType2("something")
+
+
     // F# on täysiverinen olio orientoitunut ohjelmointi kieli, joskin sen rakenteet kannustavat hyödyntämään muunlaisia 
     // rakenteita luokkia ja rajapintoja. Itse asiassa luokat ja rajapinnat eivät välttämättä ole edes paras mahdollinen 
-    // lähtökohta uudelleenkäytettävälle ja elegantille olio-orientoitunutta koodille.
+    // lähtökohta uudelleenkäytettävälle ja elegantille olio-orientoituneelle koodille.
+    // Usein tarkempi tekninen implementaatio (rajapinta/luokka/...) ei ole käyttäjälle merkityksellinen.
+
+    // Vertaa noisen määrää, perus C#-luokka:
+    //    public class MyClass{
+    //       public int Property { get ; private set; }
+    //       public MyClass(int property){
+    //            Property = property;
+    //       }
+    //    }
+
+    // F#-luokka:
+    type MyClass(property) =
+      member x.Property = property
+
+    // instanssin voi tehdä näin:
+    let instance1 = MyClass()
+    // tai näin:
+    let instance2 = new MyClass()
+
+    // F# 3.0 (Visual Studio 11) Auto-property, luokalla on property julkisella getterillä ja setterillä, 
+    // sekä konstruktori, joka asettaa propertyn alkuarvoon:
+
+    // type MyClass2(property) =
+    //  member val Property = property
+
 
     // Alla oleva esimerkki havainnollistaa kuinka klassinen validointi dekoraattori on mahdollista toteuttaa olio 
     // orientoituneesta käyttäen luokkia ja rajapintoja ja suunnilleen yhtä olio-orientoituneesti käyttämättä suoranaisesti 
@@ -283,6 +321,7 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
         let min = min
         interface IValidateInt with 
             member x.Validate (intToValidate) = intToValidate > min
+    //...
 
     let lessThan10Validator = new LessThanValidator(10) :> IValidateInt
     let moreThan5Validator  = new GreaterThanValidator(5) :> IValidateInt
@@ -291,10 +330,18 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     moreThan5Validator.Validate 2 // false
     moreThan5Validator.Validate 8 // true
 
-    // Rajanpinnan käyttö tekee rakenteesta asteen joustavammat, mutta koodia pahaisen ominaisuuden määrittelyyn 
+    // Tätä voisi jatkaa ylikuormittamalla && ja || operaattorit tuottamaan AndValidator-luokan, jne.
+    // Mutta koodin määrä paisuu yli simppelin esimerkin.
+
+    // Voisi tehdä myös anonyymilla luokalla, jos instansseja on vain yksi (Object Expression):
+    let lessThan7Validator = { new IValidateInt with member x.Validate(i) = i<7 }
+
+    // Rajanpinnan käyttö tekee rakenteesta asteen joustavamman, mutta koodia pahaisen ominaisuuden määrittelyyn 
     // tarvitsee kirjoittaa enemmän kuin itse sovellus logiikkan monimutkaisuus soisi. 
     // F# jäsennelty unioni (discrimate union) tuo ratkaisun tähän. Oheinen ratkaisu on huomattavasti monipuolisempi mutta ei juurikaan monimutkaisempi tai pidempi.
-    // Tarkasti ottaen jäsennelty unioni kääntyy abstraktiksi luokaksi, jolla on sen itsensä periviä sisäluokkia. Perinteisesti ymmärrettynä se ei ole luokka vaan jotain muuta.
+    // Tarkasti ottaen jäsennelty unioni kääntyy abstraktiksi luokaksi, jolla on sen itsensä periviä sisäluokkia. 
+    // Perinteisesti ymmärrettynä se ei ole luokka vaan jotain muuta. (Vähän kuin "joko-tai-luokka".)
+    
     type ValidateInt =
         | GreaterThan of int
         | LessThan of int
@@ -309,12 +356,12 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
             | And (validator1, validator2) -> (validator1.Validate intToValidate) && (validator2.Validate intToValidate)
             | Or (validator1, validator2) -> (validator1.Validate intToValidate) || (validator2.Validate intToValidate)
 
-    let lessThan10Validator_2 = LessThan  10 
-    let moreThan10Validator_2  = GreaterThan  10 
-    lessThan10Validator_2.Validate 9 // true
-    lessThan10Validator_2.Validate 12 // false
-    moreThan10Validator_2.Validate 9 // false
-    moreThan10Validator_2.Validate 12 // true
+    let lessThan20Validator = LessThan  20 
+    let moreThan20Validator  = GreaterThan  20 
+    lessThan20Validator.Validate 9 // true
+    lessThan20Validator.Validate 22 // false
+    moreThan20Validator.Validate 9 // false
+    moreThan20Validator.Validate 22 // true
 
     // Ja sitten jotain ihan muuta. Joko parillinen ja yli 10 tai pariton ja alle kymmenen
     let complexValidator1 = 
@@ -326,32 +373,55 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     complexValidator1.Validate 8 // false
     complexValidator1.Validate 12 // true
 
+module M5_TyypitJaObjektiOrientoitunutOhjelmointi_Osa2 = 
+
     // Ratkaisu toimii mutta syntaksin edellyttämä sulkuhässäkästä on erittäin vaikea lukuinen.
     // F# sallii luettavuutta helpottavien prefix ja infiksi operaattorien luonnin.
     // Harmittavasti CLI (Common Language Infrastructure) ei anna määrittää && tai || operaattoreja 
-    // jotka palauttavat jotain muuta kuin booleanin. +& ja +| ovat hieman kryptisiä nimiä. 
+    // jotka palauttavat jotain muuta kuin booleanin.  (op_BooleanAnd toimisi, mutta return-tyyppi on väärä)
+    // Käytössä ovat esim.  &&& ja |||  tai  +& ja +|  mutta molemmat ovat hieman kryptisiä nimiä. 
 
-    // On myös syytä huomata että F# sallii luokan määrittämisen ja laajentamisen partiaalisesti jopa sen jälkeen 
-    // kun siitä on luotu instansseja. Tässä ValidateInt luokkaa laajennetaan "lennosta" kahdella staattisella jäsenellä.
-    // Koodi on kuitenkin edelleen vahvasti tyypitettyä, sillä tätä tyyppi laajennusta ei hyödynnetä tätä ennen.
-    type ValidateInt with
-        static member (+&) (fst:ValidateInt, snd : ValidateInt) =
+    type ValidateInt =
+        | GreaterThan of int
+        | LessThan of int
+        | Predicate of (int -> bool)
+        | And of ValidateInt * ValidateInt
+        | Or of ValidateInt * ValidateInt
+        member x.Validate intToValidate =
+            match x with
+            | GreaterThan max -> intToValidate > max
+            | LessThan min -> intToValidate < min
+            | Predicate validationFunction -> validationFunction intToValidate
+            | And (validator1, validator2) -> (validator1.Validate intToValidate) && (validator2.Validate intToValidate)
+            | Or (validator1, validator2) -> (validator1.Validate intToValidate) || (validator2.Validate intToValidate)
+        static member (&&&) (fst:ValidateInt, snd : ValidateInt) =
             ValidateInt.And (fst,snd)
-        static member (+|) (fst:ValidateInt, snd:ValidateInt) =
+        static member (|||) (fst:ValidateInt, snd:ValidateInt) =
             ValidateInt.Or (fst,snd)
 
     let complexValidator2 = 
         let isOddValidator = ValidateInt.Predicate (fun x -> (x % 2) = 1)
         let isEvenValidator = ValidateInt.Predicate (fun x -> (x % 2) = 0)
-        (GreaterThan 10 +& isEvenValidator) +| (LessThan 10 +& isOddValidator)
+        (GreaterThan 10 &&& isEvenValidator) ||| (LessThan 10 &&& isOddValidator)
     complexValidator2.Validate 9 // true
     complexValidator2.Validate 13 // false
     complexValidator2.Validate 8 // false
     complexValidator2.Validate 12 // true
 
+    // On myös syytä huomata että F# sallii luokan määrittämisen ja laajentamisen partiaalisesti jopa sen jälkeen 
+    // kun siitä on luotu instansseja. Tässä ValidateInt luokkaa laajennetaan "lennosta" staattisella jäsenellä.
+    // Koodi on kuitenkin edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta ei hyödynnetä tätä ennen.
+
+    type ValidateInt with
+        static member Lisäys (fst:ValidateInt, snd : ValidateInt) =
+            ValidateInt.And (fst,snd)
+
+    // Tyyppejä voi käyttää aliaksina:
+    type dt = System.DateTime
+
 module M6_LoopitJaListaOperaatiot = 
     (*
-    5. Loopit ja lista operaatiot
+    5. Loopit ja listaoperaatiot
      - for
      - komentojen putkitus (pipelines)
      - Seq ja List -operaatiot
@@ -370,12 +440,13 @@ module M6_LoopitJaListaOperaatiot =
     // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin selvennä juurikaan koodia.)
     let anotherList = [1;2;3]
     anotherList  |> List.iter (printfn "Jee %d") 
-
     // For looppia voi käyttää listojen generointiin. 
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
     let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
-    
+
+    // seq { ... } ja muihin Computation Expressioneihin (monad) palataan myöhemmin...
+
     // Kun loopin logiikka monimutkaistuu, komentojen putkitus alkaa selkeyttämään koodia enevässä määrin.
     // Funktionaalinen ohjelmointiparadigma on vahvimmillaan nimenomaan monimutkaisten ongelmien parissa puuhatessa.
     year2012 
@@ -408,3 +479,14 @@ module M6_LoopitJaListaOperaatiot =
     let fri13seq = Seq.unfold (fun state -> Some(state, (findNextFriday state))) (new DateTime(2012,1,13))
     // 3. Lopuksi iteroidaan sekvenssiä läpi kunnes ehdot täyttävä päivä löytyy.
     fri13seq |> Seq.skipWhile (fun day -> day.Year * day.Month * day.Day < 1000000) |> Seq.head
+
+    // F# lista on linkitetty lista.
+    // Listoja voi yhdistellä (merge):
+    let merged1to6 = [1;2;3] @ [4;5;6]
+
+    //lisäksi usein käsitellään ensimmäistä alkiota, ja välitetään loput rekursiolle. :: erottaa ensimmäisen alkion ja loput:
+    let mylist = "head" :: ["tail1"; "tail2"]
+
+    let rec fibs a b = 
+        match a + b with c when c < 10000 -> c :: fibs b c | _ -> [] 
+    let fibonacci = 0::1::(fibs 0 1) 
