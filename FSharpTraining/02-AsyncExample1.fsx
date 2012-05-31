@@ -74,7 +74,7 @@ module HttpListenerHelpers =
         // Tämä toimi kuten Start yllä, mutta pyyntö käsitellään synkronisesti ja seuraava käsitellään vasta kun ensimmäinen on käsitelty kokonaan.
         static member StartSynchronous(url, f) =
             HttpListener.Start(url, f >> async.Return) 
-            // Sivu huomiona: ">>" operaattori on F#-versio matematiikan yhdistetyn funktion pallo-operaattorille; 
+            // Sivuhuomiona: ">>" operaattori on F#-versio matematiikan yhdistetyn funktion pallo-operaattorille; 
             // esim f o g (x) on sama kuin g(f(x)) olettaen, että f on kuvaus x->y ja g kuvaus y->z 
             // f >> async.Return on sama kuin (fun context -> async.Return ( f (context)))
 
@@ -127,7 +127,7 @@ module ASyncLister =
     //           async.Bind(ctx.Response.OutputStream.AsyncWrite(data),(fun () ->
     //                  async.Return()))
     //    catch e -> 
-    //         async.Bind(asyncHandleError ctx e, async1.Return()
+    //         async.Bind(asyncHandleError ctx e, async1.Return())
     //
     // F#:n async-laskentailmaus (computational expression) tekee asynkronisesta ohjelmoinnista huomattavasti 
     // helpompaa kuin mitä olisi monilla muilla kielillä tekemällä asynkronisesti suoritettavasta koodista huomattavasti 
@@ -141,7 +141,7 @@ module ASyncLister =
             do! asyncHandleError ctx e }
 
     /// Tämä käynnistää http liikenteen kuuntelijan. Muista sulkea se funktiolla Stop. Toista kuuntelijaa ei voi käynnistää samaan porttiin. 
-    /// (Asiaan mitenkään liittymättä kolmea kauttaviivaa '///' voi käyttää metodien dokumentoimiseen. Kun hiiren vie alla olevan metodin päälle näkee tämän rivin.)
+    /// (Asiaan mitenkään liittymättä: kolmea kauttaviivaa '///' voi käyttää metodien dokumentoimiseen. Kun hiiren vie alla olevan metodin päälle näkee tämän rivin.)
     let StartMirroring (url) =
         mirrorRoot <- url
         token <- HttpListener.Start("http://localhost:8080/", asyncHandleRequest)

@@ -293,12 +293,12 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
             | And (validator1, validator2) -> (validator1.Validate intToValidate) && (validator2.Validate intToValidate)
             | Or (validator1, validator2) -> (validator1.Validate intToValidate) || (validator2.Validate intToValidate)
 
-    let lessThan10Validator = LessThan  10 
-    let moreThan10Validator  = GreaterThan  10 
-    lessThan10Validator.Validate 9 // true
-    lessThan10Validator.Validate 12 // false
-    moreThan10Validator.Validate 9 // false
-    moreThan10Validator.Validate 12 // true
+    let lessThan10Validator_2 = LessThan  10 
+    let moreThan10Validator_2  = GreaterThan  10 
+    lessThan10Validator_2.Validate 9 // true
+    lessThan10Validator_2.Validate 12 // false
+    moreThan10Validator_2.Validate 9 // false
+    moreThan10Validator_2.Validate 12 // true
 
     // Ja sitten jotain ihan muuta. Joko parillinen ja yli 10 tai pariton ja alle kymmenen
     let complexValidator1 = 
@@ -341,20 +341,25 @@ module M6_LoopitJaListaOperaatiot =
      - Seq ja List -operaatiot
     *)
 
+
     // Klassinen for loopi toimii näin:
+    for i = 1 to 3 do printfn "Jee %d" i
+    for i = 3 downto 1 do printfn "Jee %d" i
+
+    // C#:n foreachia vastaava rakenne näyttää F#:ssa tältä. 
     let simpleList = [1;2;3]
-    for i in simpleList  do
-        printfn "Jee %d" i
+    for i in [1;2;3] do printfn "Jee %d" i
 
     // Usein for loopeja tehokkaampaa ja elegantimpaa on putkittaa komentoja. |> operaattorilla
     // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin selvennä juurikaan koodia.)
-    simpleList |> List.iter (printfn "Jee %d") 
+    let anotherList = [1;2;3]
+    anotherList  |> List.iter (printfn "Jee %d") 
 
-    // For looppi voi käyttää listojen generointiin. 
+    // For looppia voi käyttää listojen generointiin. 
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
     let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
-
+    
     // Kun loopin logiikka monimutkaistuu, komentojen putkitus alkaa selkeyttämään koodia enevässä määrin.
     // Funktionaalinen ohjelmointiparadigma on vahvimmillaan nimenomaan monimutkaisten ongelmien parissa puuhatessa.
     year2012 
