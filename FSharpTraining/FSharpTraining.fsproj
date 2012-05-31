@@ -42,7 +42,7 @@
     <Compile Include="Tutorial.fsx" />
     <None Include="01-Basics.fsx" />
     <None Include="02-AsyncExample1.fsx" />
-    <None Include="03-ListOperationsExample.fsx" />
+    <None Include="03-GraphColoringExample.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

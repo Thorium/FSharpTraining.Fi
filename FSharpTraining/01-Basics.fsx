@@ -4,46 +4,54 @@ module M1_HelloFSharp =
      1. Mikä on F# ja miksi käyttäisin sitä?
 
     Mitä F# on?
-        * F#  on multiparadigma-ohjelmointikieli, jonka painopiste on funktionaalisessa ohjelmointiparadigmassa.
-        * Yksi kolmesta Visual Studion mukana tulevista kielistä. Se perustuu OCaml-kieleen.
+        * F# on multiparadigma-ohjelmointikieli, jonka painopiste on funktionaalisessa ohjelmointiparadigmassa.
+        * F# on yksi kolmesta Visual Studion mukana tulevista kielestä. 
+        * F#:n juuret ovat OCaml ja ML-kielessä. Myös Haskell on keskeinen vaikute. (Ks. http://www.cs.helsinki.fi/u/poikelin/FSharp/taustaa.html)
     
     Miksi?
-        - F# on ilmaisuvoimainen ja syntaksiltaan tiivis kieli.
-            * Vaikka F# vahvasti tyypitetty kieli, sen monet rakenteet muistuttavat keveydessään dynaamisesti tyypitettyjä skripti kieliä (kuten Python ja Ruby).
-            * F# koodin rivimäärä on usein 2-5 alhaisempi kuin vastaavan C#-ratkaisun. Koodin luettavuus on samaa tasoa kuin C#- tai Java-koodin - joskin eri asiat ovat 
-              helppolukuisia/helppolukuisia. F#:ssa on enemmän kryptisiä lynenteitä ja operaattoreja, siinä missä Javassa ja C#:ssa on enemmän avainsanoja ja idiomeja 
-              muistavaksi. (lukijan näkemys)
-            * F# on abstraktiotasoltaan korkeampi kieli kuin C#. Vastaavasti kuin C# on abstraktiotasoltaan korkeampi kieli kuin CIL/assembler.
-            * F# ohjaa oletuksena sivuvaikutuksettomaan koodaukseen. Muutoinkin F# antaa huomattavasti näkemystä siitä *miksi* tehdä asioita myös 
-              muissa kielissä jollain tavalla. 
-            * Interactive-ympäristön (REPL-loop) avulla kehittäjä pääsee keskittymään ongelman ytimeen samalla kun testaa koodiaan.
-        - C:n suorituskykyprofiili, eli vain hieman (=selvästi alle kymmenen kertaa) hitaampi kuin hyvin optimoitu C-koodi, siten suunnilleen 
-              yhtä tehokas kuin Java ja C#. Dynaamiset, skriptikielet (kuten PHP, Python, ja Ruby) ovat 10-1000-kertaa optimoitua C-koodia hitaampia.
-              Ero korostuu laskentaintensiivisissä tehtävissä.
-        - Kaikki .NET-frameworkin luokkakirjastot ovat käytettävissä. F# on .NET-kieli ja kääntyy CIL:ksi (kuten C# ja VB.NET; CIL = Common intermediate language, 
-              AKA Microsoft Intermediate lanuguage (MSIL)).
+        - F# on ilmaisuvoimainen ja syntaksiltaan tiivis kieli
+            * Vaikka F# on vahvasti tyypitetty kieli, sen monet rakenteet muistuttavat keveydessään 
+              dynaamisesti tyypitettyjä skripti kieliä (kuten Python ja Ruby). Interactive-ympäristön 
+              (REPL-loop) avulla kehittäjä pääsee keskittymään ongelman ytimeen samalla kun 
+              testaa koodiaan.
+            * F# koodin rivimäärä on usein 2-5 alhaisempi kuin vastaavan C#-ratkaisun. Koodin luettavuus 
+              on samaa tasoa kuin C#- tai Java-koodin - joskin eri asiat ovat helppolukuisia/helppolukuisia. 
+              F#:ssa on enemmän kryptisiä lynenteitä ja operaattoreja, siinä missä Javassa ja C#:ssa on enemmän 
+              avainsanoja ja idiomeja muistavaksi.
+            * F# on abstraktiotasoltaan korkeampi kieli kuin C#. Vastaavasti kuin C# on abstraktiotasoltaan korkeampi 
+              kieli kuin CIL/assembler.
+            * F# ohjaa oletuksena sivuvaikutuksettomaan koodaukseen. Muutoinkin F# antaa huomattavasti näkemystä 
+              siitä *miksi* tehdä asioita myös muissa kielissä jollain tavalla. 
+        - F#:lla on C:n suorituskykyprofiili.  Toisin sanoen se on vain hieman (=selvästi alle kymmenen kertaa) hitaampi 
+            kuin hyvin optimoitu C-koodi, ja siten suunnilleen yhtä tehokas kuin Java ja C#. Dynaamiset, skriptikielet 
+            (kuten PHP, Python, ja Ruby) ovat 10-1000-kertaa optimoitua C-koodia hitaampia. Ero korostuu 
+            laskentaintensiivisissä tehtävissä.
+        - Kaikki .NET-frameworkin luokkakirjastot ovat käytettävissä. F# on .NET-kieli ja kääntyy CIL:ksi (kuten C# ja 
+            VB.NET; CIL = Common intermediate language; AKA Microsoft Intermediate lanuguage (MSIL)).
 
     Missä? 
-        - F# soveltuu parhaiten Business-logiikan ja datankäsittelyn toteuttamiseen. (Ks. Don Symen esitys F# 3.0: data, services, Web, cloud, at your fingertips 
-          http://channel9.msdn.com/Events/BUILD/BUILD2011/SAC-904T)
+        - F# soveltuu parhaiten Business-logiikan, monimutkaisten algoritmien ja datan käsittelyn toteuttamiseen. 
+            (Ks. Don Symen esitys F# 3.0: data, services, Web, cloud, at your fingertips http://channel9.msdn.com/Events/BUILD/BUILD2011/SAC-904T)
         - F#:lla voi toteuttaa myös käyttöliittymäkerroksen ja tiedonesityskerroksen. WebSharper on kiinnostava esimerkki siitä, kuinka käyttöliittymän voi toteuttaa 
-          funktionaalisen ohjelmointi padigman hengessä (http://websharper.com/home).
+            funktionaalisen ohjelmointi padigman hengessä (http://websharper.com/home).
      
-     Esimerkki-koodi?
-
-     Helpoin tapa suorittaa alla oleva koodi ja katsoa mitä tapahtuu on mennä ensimmäselle koodi riville ja painaa Alt-ä 
-     (Jos maalaat ja suoritat koodin (alt-enter), ota rivien alut mukaan, sillä sisennyksellä on F#:ssa oletuksena merkitystä).
+    Käytännössä?
+        - Tämä esitys on laadittu mahdollisimman käytännön läheiseksi sukellukseksi F#:n syntaksiin. Suurin osa esityksestä 
+          onkin koodia.
+        - Helpoin tapa suorittaa alla oleva koodi ja katsoa mitä tapahtuu on mennä ensimmäselle koodi riville ja painaa Alt-ä.
+          Alt-ä suorittaa vain yhden rivin ja usein ilmaus jatkuu toisella rivillä. Tälläin maalaat ja suoritat koodi 
+          alt-enter-yhdistelmällä. Huom. ota rivien alut mukaan, sillä sisennyksellä *on* F#:ssa merkitystä. 
+          (Valikoiden kautta saa aikaan saman.)
      
-     Esim. siirry alle olevalle riville "System.Console.Beep ()" ja paina alt+ä. Jos äänet ovat päällä pitäisi kuulua "beep".
-     *)
+    Esim. siirry alle olevalle riville "System.Console.Beep ()" ja paina alt+ä. Jos äänet ovat päällä pitäisi kuulua "beep".
+    *)
      System.Console.Beep ()
 
      // Alla oleva merkkijono tulostuu F#-interaktiven tulosjonoon muodossa: 
      // val it : string = "Hello world"'
      "Hello world"
 
-     // Klassinen hello world ikkunalla. 
-     // Apufunktiot show ja withControl helpottavat koodin suorittamista rivi riviltä
+     // Klassinen hello world teksti ikkunassa.
      open System.Windows.Forms
      let form = new Form()
      form.Controls.Add(new Label(Text = "Hello world!"))
@@ -59,61 +67,102 @@ module M1_HelloFSharp =
      form2.Show()
 
      // F# interactiven sisällä voi muokata luotu lomaketta "lennossa".
-     let beep () = for i = 0 to 5 do System.Console.Beep()
+     let beep () = for i = 0 to 2 do System.Console.Beep()
      namefield.KeyUp.Add(fun e-> hello.Text <- match namefield.Text with | "" -> "" | "test" | "Test" -> beep (); "Syötä oikea nimi!" | text -> "Hello, " + text + "!")
 
-module M2_TunnisteetJaLiteraalit = 
+module M2_LiteraalitJaTunnisteet = 
     (*
-    2. Tunnisteet, primitiivityypit ja literaalit
-
-    Teemat:
-     - let
-     - literaalit
-     - vahvatyypistys
+    2. Tunnisteet, primitiivityypit ja muutettavuus
     *)
 
-    // F# tunnisteet esitellään let-avainsanalla, tunnisteet tyypin näkee viemällä hiiren kursori nimen päälle
-    // Koodin suorittaminen tapahtuu maalaamalla teksti ja painamalla alt+enter. (Valikoiden kautta saa aikaan saman.)
-    let x = 1 
-    let y = 1.0 
+    // F# tunnisteet esitellään let-avainsanalla. 
+    // Tunnisteen tyypin näkee viemällä hiiren kursori nimen päälle 
+    // Primitiivi tyyppien literaalit ovat pääsääntöisesti samat kuin C#:ssa.
+    let x = 1 // 32 bittinen kokonaisluku
+    // tunniteen tyypin voi määittää syntaksilla let nimi : tyyppi
+    let x2 : System.Int64 = 1L // 64 bittinen kokonaisluku 
+    let y : float = 1.0  // System.Double, 64 bittinen liukuluku; C#:ssa double, F# float (HUOM!)
+    let y = 1.0f // System.Single, 32 bittinen liukuluku; C#:ssa float, F#:ssa float32 (HUOM!)
     let str = "merkkijono"
+    let chr = 'm'
+    
+    // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia. Tosin suomenkielisessä näppiksessä 
+    // ` (backtick)löytyy hankalasti yhdistelmällä shift-´-[jokin merkki]:
+    let ``tämä tunniste vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
+    ``tämä tunniste vaatii välimerkkejä ja on pitkä, mutta selkeä``
 
-    // Useat muuttujat esitellään eri tavalla kuin C#:ssa:
-    let a, b, c = "a", "b", "c"
+    // Toisin kuin C#:ssa oletuksena tunnisteet eivät ole muutettavissa (tunniste on ei-muutettava ("immutable")).
+    // Muuttujien (muutettavien tunnisteiden) esittely pitää tehdä explisiittisesti käyttäen mutable-avainsanaa.
+    // (C#:n oletus arvo on päin vastainen, ei-muutettavan tunnisteen esittelussa pitää käyttää readonly-avainsanaa.)
+    let mutable z = 1
+    // Muuttujaan sijoitus tapahtuu '<-' -operaattorilla
+    z <- 5
+    z
+    // Yhtäsuuruus merkki ei toimi koskaan (!!!) muuttujaan sijoituksena:
+    z = 1 // palauttaa arvon true. x:n arvo ei muutu.
+    
+    // Matematiikan tapaan yhtäsuuruutta käytetään vain seuraavassa kahdessa merkityksessä:
+    // 1) uuden tunnisteen/nimen esittelyyn
+    // 2) yhtäsuuruus vertailuissa
 
+    // Tämä voi tuntua aluksi hämmentävältä. Toisaalta: ohjelmistojen bugit johtuvat usein siitä, 
+    // että jokin muuttuja ei ole siinä tilassa missä oletetaan. Kun laskentaa aletaan tehdä hajautettusti 
+    // usealla ytimellä ongelma räjähtää helposti käsiin. Tässä mielessä ei-muokattavissa olevat tunnisteet 
+    // on parempi oletusarvo kuin se, että tunnisteet ovat oletuksena muutettavia.
+
+    // Ei-muutettavuus ei C# näkökulmasta tarkoita sitä, että kyseessä olisi vakio. Tunnisteen arvo ei leivota sisään
+    // luokkakirjaston CIL-koodiin; sitä ei vaan voi muuttaa sen jälkeen kun se on kerran asetettu. 
+           
+    // Itse asissa tarkasti ottaen F# koodissa ei juurikaan käytetä C#-vakiota vastaavaa rakennetta. C#:n:
+    // public const int Vakio = 1;
+    // on F#:ksi
+    [<Literal>]     
+    let Vakio = 1
+    // Yleistäen ja mutkia oikoen: muuttuja = muutettavissa-oleva tunniste (mutable identifier) ja vakio = ei-muutettava 
+    // tunniste (immutable identifier). Ei-muutettava tyyppi (immutable type) on sellainen jonka instanssien tilaa ei 
+    // voi muuttaa. Esim. primitiivi tyypit. string ja DateTime. Muutettavissa-olevat tyyppi (mutable type) on 
+    // sellainen, jonka instanssien tila voi muokata (suurin osa .NET:n Frameworkin luokista). 
+    // Ohjelmoijan näkökulmasta seuraava on käytännössö vakio:
+    let Vakio = 1 
+                                                                                                    
+module M3_Listat =     
+    // Listat ja taulukot
+    // Toisin kuin C# listat ja taulukot ovat muuttumattomia (immutable). 
     let list = [1;2;3]
     let array = [|1;2;3|] 
-    // lista on immutable F#-lista, array (tai paremminkin sequence) on .NET yhteensopiva IEnumerable<T>
+    
+    // Lista list on F# spesifi linkitettynä listana toteutetta rakenne. Array on C#:n System.Array
+    // Huom. vaikka itse array tunniste on merkittu ei-muokattavaksi, System.Array on muokattava
+    // näin ollen seuraava on sallittua
+    array.[0]<-5
+    array
+    // Se että tunnisteet asettaa tarkoittaa vain sitä, että po tunnisteen arvo ei voi muuttua: 
+    // array <- [|1;2;3|]    // Virhe: This value is not mutable
 
-    // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin tuple on yksi kappale n:ää tyyppiä:
-    let tupple = (1,"a",0.4)
+    // Listan indeksointi on mahdollista
+    list.[0]
+    // Mutta muokaaminen ei:
+    // list.[1] <- 5  // Virhe: "Property Item kannot be set"
+
+    // .NET:n muutettavissa olevia voi toki myös käyttää ja net toimivat normaaliin tapaan. 
+    let genericList = System.Collections.Generic.List<string>()
+                                                                                       
+    // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin monikko (tuple) on yksi kappale n:ää tyyppiä:
+    let tuple = (1,"a",0.4)
     
     // Sulut ovat vapaaehtoisia:
-    let tupple2 = 1,"k"
-    // Ja tuplen voi purkaa kivasti:
-    let eka, toka = tupple2
+    let tuple2 = 1,"k"
+    // Ja monikon (tuplen) voi purkaa kivasti:
+    let eka, toka = tuple2
+    // Useat muuttujam esittely samalla rivillä hyödyntää monikkoa:
+    let a, b, c = "a", "b", "c" 
     
-    // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia:
-    let ``tämä vakio vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
+
 
     // Funktio ilman parametreja (vs. sulkuja ilman vakio / property):
     let Action() = 1
 
-    // Oletuksena koodi on sivuvaikutuksetonta "immutable"-koodia. 
-    // Ohjelmistojen bugit johtuvat usein siitä, että jokin muuttuja ei ole siinä tilassa missä oletetaan.
-    // Tämän takia muuttujien käyttöä on syytä välttää. Tee mieluummin uusi vakio.
 
-    // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla 
-    // = merkki tarkoittaa yhtäsuuruutta aina paitsi asetettaessa tunnisteeseen arvo. Muuttujaan sijoitus tapahtuu <- operaattorilla
-    x = 1 // palauttaa arvon true. x:n arvo ei muutu.
-    let mutable z = 1
-    z = 1 // true
-
-    // Muuttujan arvon muuttamiseen käytetään '<-' operaatoria. =-operaattori käyttäytyy kutakuinkin niin kuin matemaatikko voisin sen olettaa 
-    // käyttäytyvän: Aino tapaus jossa sitä käytetään arvon asettamiseen on tunnisteen esittely. Aina muulloin = tarkoittaa yhtä suuruus vertailua.
-    // F#:ssa ei ole ==-operaattoria, mikä saattaa hämmentää C#- ja Java-koodaajaa. 
-    z <- 2  
-    z = 1 // false, koska arvo on nyt 2
 
     // Interaktiven tulosvirtaan voi kirjoittaa komennolla printf printfn (jälkimmäinen kirjoittaa perään rivin vaihdon).
     // printtaus metodi tekee tyyppitarkastuksen
