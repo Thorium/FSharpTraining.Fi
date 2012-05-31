@@ -2,6 +2,12 @@
 // Game
 // Bownling game implemented more or less like in 
 // "Agile Principles, Patterns, and Practices in C#" by Robert Martin, Micah Martin
+
+(* for interactive:
+
+ #r "Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"
+
+ *)
 module Contract =
     open System
     open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -83,26 +89,8 @@ module Contract =
         [<TestMethod>]
         member x.TestSampleGame() = 
             let game = x.newGame()
-            game.Add(1); 
-            game.Add(4); 
-            game.Add(4); 
-            game.Add(5); 
-            game.Add(6); 
-            game.Add(4); 
-            game.Add(5); 
-            game.Add(5); 
-            game.Add(10); 
-            game.Add(0); 
-            game.Add(1); 
-            game.Add(7); 
-            game.Add(3); 
-            game.Add(6); 
-            game.Add(4); 
-            game.Add(10); 
-            game.Add(2); 
-            game.Add(8); 
-            game.Add(6); 
-            Assert.AreEqual(133, game.Score);  
+            [1;4;4;5;6;4;5;5;10;0;1;7;3;6;4;10;2;8;6] |> List.iter game.Add
+            Assert.AreEqual(133, game.Score) 
         
         [<TestMethod>] 
         member x.TestHeartBreak() =
@@ -140,6 +128,8 @@ module MyImplementation =
 // Referenssi toteutus 1
 // Toteutus noudattelee Martin & Martinin ratkaisua.
 // Koodia on hieman siistitty F# henkisemmäksi. Suurin muutos on Scorer luokan muuttaminen immutableksi. 
+// Usein on huono idea lähteä miettimään F#-ratkaisua suoraa C#-koodin pohjalta: tämä johtaa samanlaiseen koodiin
+// kuin jos VB 6 koodia kääntäisi C#-koodiksi. Siitä huolimatta suurin osa nykypäivän koodista on C#-koodia.
 // Pisteiden laskenta noudattaa logiikkaa joka sallii sivuvaikutukset (mutable)
 module AlmostOriginalImplementation =
     open Contract 

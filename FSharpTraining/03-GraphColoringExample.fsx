@@ -36,6 +36,12 @@ menee tuhottomasti aikaa verrattuna mihin tahansa muuhun koodiin.
 Onneksi tiiviys ei implikoi kryptisyyttä sen enempää kirjoitettujen tekstien kuin koodinkaan osalta: Tiivisti voi 
 kirjoittaa olematta kryptinen ja jos siinä onnistuu teksti on todennäköisesti mitä erinomaisinta. Vastaavalla tavalla 
 tiivis koodi voi olla hyvinkin helppolukuista. Usein juurikin koodin määrä tekee siitä hankalammin hahmotettavaa. 
+
+Asiaa voisi ajatella näinkin: Miksi ylipäätään käytätte for-looppia copy&pasten sijaan?
+Koodin toiminnallisuuden läpi miettiminen kestää aikansa, oli koodi kuinka lyhyt tai pitkä hyvänsä.
+Lyhyempi koodi, korkeampi abstraktio, tarkempi kääntäjä ja pienempi manuaalinen virheherkkyys johtavat jo itsessään
+koodiin jonka ylläpitokustannukset ovat pienemmät.
+
 *)
 module Data = 
     type Country =
@@ -76,7 +82,7 @@ module Solver =
         let foldSolutionFunc (processedCountries, solutions) countryInProcess =
             // Etsitään kaikki ne naapurit, jotka on jo käsitelty ja 
             // tarkatetaan onko maa itse mahdollisesti jo käsitelty osittain osana
-            // jonkin toisen maan käsittely.
+            // jonkin toisen maan käsittelyä.
             let processedRelatedCountries =
                 [|for country, neighbors in countryNeighborMapping do
                     if country = countryInProcess then 
