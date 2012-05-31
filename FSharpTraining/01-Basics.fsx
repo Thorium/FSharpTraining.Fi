@@ -494,10 +494,10 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     // Käytössä ovat esim.  &&& ja |||  tai  +& ja +|  mutta molemmat ovat hieman kryptisiä nimiä, mutta 
     // parempi kuin ei mitään 
 
-    // F# loukkia on mahdollista laajentaa lennosta with avain sanalla. 
+    // F# luokkia on mahdollista laajentaa lennosta with avain sanalla. 
     //
     // Rakenne muistuttaa kaukaisesti C#:n extension metodeja tai mahdollisuutta esitellä luokka useassa eri tiedostossa
-    // käyttäen partial määrettä loukassa. Koodi on edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta 
+    // käyttäen partial määrettä luokassa. Koodi on edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta 
     // ei hyödynnetä tätä ennen.
     // 
     // Alla oleva koodi laajentaa ValidateInt tyyppi kahdella operaattorilla (C#:n extension metodit eivät tähän taivu):
@@ -547,7 +547,7 @@ module M6_LoopitJaListaOperaatiot =
       seq { yield value; 
             yield! iterate f (f value) }
     
-    let xs = iterate (fun f-> f 1) 0
+    let xs = iterate (fun f-> f + 1) 0
              |> Seq.take(10) |> Seq.toList
 
     // val x : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
