@@ -154,6 +154,7 @@ module M3_Listat =
     //Array          Ei               Kyllä!          O(1)
     //Generic List   Ei               Ei              O(1)
 
+<<<<<<< HEAD
     // Best practice on käyttää listoja ei-muutettavina rakenteina (immutableina) ja olla viittaamatta 
     // suoraan indekseihin. Sen sijaan että poistat listasta alkion, tee uusi lista, josta on suodatettu 
     // poistettava alkio.
@@ -167,6 +168,30 @@ module M3_Listat =
     let eka, toka = tuple2
     // Useat muuttujam esittely samalla rivillä hyödyntää monikkoa:
     let a, b, c = "a", "b", "c" 
+=======
+    // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla 
+    // = merkki tarkoittaa yhtäsuuruutta aina paitsi asetettaessa tunnisteeseen arvo. Muuttujaan sijoitus tapahtuu <- operaattorilla
+    let x = 1
+    x = 1 // palauttaa arvon true. x:n arvo ei muutu.
+    let mutable z = 1
+    z = 1 // true
+
+    // Muuttujan arvon muuttamiseen käytetään '<-' operaatoria. =-operaattori käyttäytyy kutakuinkin niin kuin matemaatikko voisin sen olettaa 
+    // käyttäytyvän: Aino tapaus jossa sitä käytetään arvon asettamiseen on tunnisteen esittely. Aina muulloin = tarkoittaa yhtä suuruus vertailua.
+    // F#:ssa ei ole ==-operaattoria, mikä saattaa hämmentää C#- ja Java-koodaajaa. 
+    z <- 2  
+    z = 1 // false, koska arvo on nyt 2
+
+    // Interaktiven tulosvirtaan voi kirjoittaa komennolla printf printfn (jälkimmäinen kirjoittaa perään rivin vaihdon).
+    // printtaus metodi tekee tyyppitarkastuksen
+    // %d = kokonaisluku
+    // %f = liukuluku
+    // %s = merkkijono
+    // %O = objekti 
+    // %A = taulukko"
+    printfn "%d %f %s %O %A" 2 3.0 "moi" [1;2;3] [|4;5;6|] 
+    // (tai .NET-perinteisesti System.Console.WriteLine)
+>>>>>>> remotes/Thorium/fsharptraining.fi/master
 
 module M3_Funktiot = 
     (*
@@ -528,6 +553,16 @@ module M6_LoopitJaListaOperaatiot =
      - Seq ja List -operaatiot
     *)
 
+<<<<<<< HEAD
+=======
+    //             Immutable items  Immutable list  Element lookup
+    //F# list        Kyllä!           Kyllä!          O(n), eli O(1) listan alkuun
+    //Array          Ei               Kyllä!          O(1)
+    //Generic List   Ei               Ei              O(1)
+
+    // Best practice on käyttää listoja immutableina (ei muuttaa arvoja) ja ei viitata suoraa indekseihin.
+    // Sen sijaan että poistat listasta alkion, tee uusi lista, josta on suodatettu poistettava alkio.
+>>>>>>> remotes/Thorium/fsharptraining.fi/master
 
     // Klassinen for loopi toimii näin:
     for i = 1 to 3 do printfn "Jee %d" i
@@ -542,7 +577,11 @@ module M6_LoopitJaListaOperaatiot =
     let anotherList = [1;2;3]
     anotherList  |> List.iter (printfn "Jee %d") 
 
+<<<<<<< HEAD
     // For looppi voi käyttää listojen generointiin. 
+=======
+    // Sequence expression: For looppia voi käyttää listojen generointiin. 
+>>>>>>> remotes/Thorium/fsharptraining.fi/master
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
     let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
@@ -635,7 +674,6 @@ module M6_LoopitJaListaOperaatiot =
     let rec fibs a b = 
         match a + b with c when c < 10000 -> c :: fibs b c | _ -> [] 
     let fibonacci = 0::1::(fibs 0 1) 
-
 
     // Matriisit ja moniulotteiset arrayt:
     Array2D.init 3 3 (fun x y -> x+y)
@@ -809,4 +847,7 @@ module M8_Syvemmälle =
     v.Tallenna("viivotin") |> ignore
     v.Tallenna("kirja") |> ignore
     v.Inventaario()
+<<<<<<< HEAD
 
+=======
+>>>>>>> remotes/Thorium/fsharptraining.fi/master
