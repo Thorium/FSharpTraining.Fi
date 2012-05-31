@@ -85,6 +85,7 @@ module M2_TunnisteetJaLiteraalit =
     let list = [1;2;3]
     let array = [|1;2;3|] 
     // lista on immutable F#-lista, array (tai paremminkin sequence) on .NET yhteensopiva IEnumerable<T>
+<<<<<<< HEAD
 
     // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin tuple on yksi kappale n:ää tyyppiä:
     let tupple = (1,"a",0.4)
@@ -98,6 +99,21 @@ module M2_TunnisteetJaLiteraalit =
     let ``tämä muuttuja vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
 
 
+=======
+
+    // Siinä missä listat ovat n kappaletta yhtä tyyppiä, niin tuple on yksi kappale n:ää tyyppiä:
+    let tupple = (1,"a",0.4)
+    
+    // Sulut ovat vapaaehtoisia:
+    let tupple2 = 1,"k"
+    // Ja tuplen voi purkaa kivasti:
+    let eka, toka = tupple2
+    
+    // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia:
+    let ``tämä muuttuja vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
+
+
+>>>>>>> cc13bd166f0bf8d40a32494fa4fb4f6ef9dc3024
     // Oletuksena koodi on sivuvaikutuksetonta "immutable"-koodia. 
     // Ohjelmistojen bugit johtuvat usein siitä, että jokin muuttuja ei ole siinä tilassa missä oletetaan.
     // Tämän takia muuttujien käyttöä on syytä välttää. Tee mieluummin uusi vakio.
