@@ -118,6 +118,7 @@ module M2_TunnisteetJaLiteraalit_Osa2_Lisäkikkailua =
 
     // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla 
     // = merkki tarkoittaa yhtäsuuruutta aina paitsi asetettaessa tunnisteeseen arvo. Muuttujaan sijoitus tapahtuu <- operaattorilla
+    let x = 1
     x = 1 // palauttaa arvon true. x:n arvo ei muutu.
     let mutable z = 1
     z = 1 // true
@@ -462,7 +463,6 @@ module M6_LoopitJaListaOperaatiot =
      - Seq ja List -operaatiot
     *)
 
-<<<<<<< HEAD
     //             Immutable items  Immutable list  Element lookup
     //F# list        Kyllä!           Kyllä!          O(n), eli O(1) listan alkuun
     //Array          Ei               Kyllä!          O(1)
@@ -470,16 +470,11 @@ module M6_LoopitJaListaOperaatiot =
 
     // Best practice on käyttää listoja immutableina (ei muuttaa arvoja) ja ei viitata suoraa indekseihin.
     // Sen sijaan että poistat listasta alkion, tee uusi lista, josta on suodatettu poistettava alkio.
-=======
->>>>>>> remotes/ilmirajat/fsharptraining.fi/master
 
     // Klassinen for loopi toimii näin:
     for i = 1 to 3 do printfn "Jee %d" i
     for i = 3 downto 1 do printfn "Jee %d" i
 
-<<<<<<< HEAD
-    // For looppi voi käyttää listojen generointiin. 
-=======
     // C#:n foreachia vastaava rakenne näyttää F#:ssa tältä. 
     let simpleList = [1;2;3]
     for i in [1;2;3] do printfn "Jee %d" i
@@ -488,8 +483,8 @@ module M6_LoopitJaListaOperaatiot =
     // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin selvennä juurikaan koodia.)
     let anotherList = [1;2;3]
     anotherList  |> List.iter (printfn "Jee %d") 
-    // For looppia voi käyttää listojen generointiin. 
->>>>>>> remotes/ilmirajat/fsharptraining.fi/master
+
+    // Sequence expression: For looppia voi käyttää listojen generointiin. 
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
     let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
@@ -580,9 +575,7 @@ module M6_LoopitJaListaOperaatiot =
     // Esim. Fibonacci-lukusarja:
     let rec fibs a b = 
         match a + b with c when c < 10000 -> c :: fibs b c | _ -> [] 
-<<<<<<< HEAD
     let fibonacci = 0::1::(fibs 0 1) 
-
 
     // Matriisit ja moniulotteiset arrayt:
     Array2D.init 3 3 (fun x y -> x+y)
@@ -756,6 +749,3 @@ module M8_Syvemmälle =
     v.Tallenna("viivotin") |> ignore
     v.Tallenna("kirja") |> ignore
     v.Inventaario()
-=======
-    let fibonacci = 0::1::(fibs 0 1) 
->>>>>>> remotes/ilmirajat/fsharptraining.fi/master
