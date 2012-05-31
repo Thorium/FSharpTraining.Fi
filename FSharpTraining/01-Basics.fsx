@@ -154,7 +154,6 @@ module M3_Listat =
     //Array          Ei               Kyllä!          O(1)
     //Generic List   Ei               Ei              O(1)
 
-<<<<<<< HEAD
     // Best practice on käyttää listoja ei-muutettavina rakenteina (immutableina) ja olla viittaamatta 
     // suoraan indekseihin. Sen sijaan että poistat listasta alkion, tee uusi lista, josta on suodatettu 
     // poistettava alkio.
@@ -168,30 +167,6 @@ module M3_Listat =
     let eka, toka = tuple2
     // Useat muuttujam esittely samalla rivillä hyödyntää monikkoa:
     let a, b, c = "a", "b", "c" 
-=======
-    // Oletuksena kaikki ovat vakioita. Muuttujat pitää erikseen merkata mutable arvain sanalla 
-    // = merkki tarkoittaa yhtäsuuruutta aina paitsi asetettaessa tunnisteeseen arvo. Muuttujaan sijoitus tapahtuu <- operaattorilla
-    let x = 1
-    x = 1 // palauttaa arvon true. x:n arvo ei muutu.
-    let mutable z = 1
-    z = 1 // true
-
-    // Muuttujan arvon muuttamiseen käytetään '<-' operaatoria. =-operaattori käyttäytyy kutakuinkin niin kuin matemaatikko voisin sen olettaa 
-    // käyttäytyvän: Aino tapaus jossa sitä käytetään arvon asettamiseen on tunnisteen esittely. Aina muulloin = tarkoittaa yhtä suuruus vertailua.
-    // F#:ssa ei ole ==-operaattoria, mikä saattaa hämmentää C#- ja Java-koodaajaa. 
-    z <- 2  
-    z = 1 // false, koska arvo on nyt 2
-
-    // Interaktiven tulosvirtaan voi kirjoittaa komennolla printf printfn (jälkimmäinen kirjoittaa perään rivin vaihdon).
-    // printtaus metodi tekee tyyppitarkastuksen
-    // %d = kokonaisluku
-    // %f = liukuluku
-    // %s = merkkijono
-    // %O = objekti 
-    // %A = taulukko"
-    printfn "%d %f %s %O %A" 2 3.0 "moi" [1;2;3] [|4;5;6|] 
-    // (tai .NET-perinteisesti System.Console.WriteLine)
->>>>>>> remotes/Thorium/fsharptraining.fi/master
 
 module M3_Funktiot = 
     (*
@@ -278,7 +253,7 @@ module M4_Generics =
     Method5 "string"
     Method5 1
 
- module M4_Generics_Vertailua = 
+module M4_Generics_Vertailua = 
     // Lista-parametri OCaml-tapaan eksplisiittisesti: 
     let l2 : int list = [1;2;3]
 
@@ -396,7 +371,7 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi =
     // F# on täysiverinen olio orientoitunut ohjelmointi kieli, joskin sen rakenteet kannustavat hyödyntämään muunlaisia 
     // rakenteita luokkia ja rajapintoja. Itse asiassa luokat ja rajapinnat eivät välttämättä ole edes paras mahdollinen 
     // lähtökohta uudelleenkäytettävälle ja elegantille olio-orientoituneelle koodille.
-// Usein tarkempi tekninen implementaatio (rajapinta/luokka/...) ei ole käyttäjälle merkityksellinen.
+    // Usein tarkempi tekninen implementaatio (rajapinta/luokka/...) ei ole käyttäjälle merkityksellinen.
 
     // Vertaa melun määrää:
     // C#-luokka:
@@ -430,8 +405,7 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi =
                                                 
     let myObject3 = "juttu" :> obj
     let myString3 = myObject3 :?> string
-    let integerType = typeof<int> // kuten C#:n typeof()
-    
+    let integerType = typeof<int> // kuten C#:n typeof()    
 
 module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki = 
     // Alla oleva esimerkki havainnollistaa kuinka klassinen validointi dekoraattori on mahdollista toteuttaa 
@@ -541,10 +515,7 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     complexValidator2.Validate 13 // false
     complexValidator2.Validate 8 // false
     complexValidator2.Validate 12 // true
-       
-
-    
-
+  
 module M6_LoopitJaListaOperaatiot = 
     (*
     6. Loopit ja listaoperaatiot
@@ -552,18 +523,6 @@ module M6_LoopitJaListaOperaatiot =
      - komentojen putkitus (pipelines)
      - Seq ja List -operaatiot
     *)
-
-<<<<<<< HEAD
-=======
-    //             Immutable items  Immutable list  Element lookup
-    //F# list        Kyllä!           Kyllä!          O(n), eli O(1) listan alkuun
-    //Array          Ei               Kyllä!          O(1)
-    //Generic List   Ei               Ei              O(1)
-
-    // Best practice on käyttää listoja immutableina (ei muuttaa arvoja) ja ei viitata suoraa indekseihin.
-    // Sen sijaan että poistat listasta alkion, tee uusi lista, josta on suodatettu poistettava alkio.
->>>>>>> remotes/Thorium/fsharptraining.fi/master
-
     // Klassinen for loopi toimii näin:
     for i = 1 to 3 do printfn "Jee %d" i
     for i = 3 downto 1 do printfn "Jee %d" i
@@ -577,11 +536,7 @@ module M6_LoopitJaListaOperaatiot =
     let anotherList = [1;2;3]
     anotherList  |> List.iter (printfn "Jee %d") 
 
-<<<<<<< HEAD
-    // For looppi voi käyttää listojen generointiin. 
-=======
     // Sequence expression: For looppia voi käyttää listojen generointiin. 
->>>>>>> remotes/Thorium/fsharptraining.fi/master
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
     let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
@@ -681,173 +636,3 @@ module M6_LoopitJaListaOperaatiot =
     // val it : int [,] = [[1; 2; 3]
     //                     [2; 3; 4]
     //                     [3; 4; 5]]
-
-
-module M7_MuutaDotNetSälää = 
-    (*
-    7. .NET yleisiä toiminnallisuuksia
-     - Resurssien käyttö
-     - Virheiden käsittely
-     - Attribuutit
-    *)
-
-    //Resurssien käyttö:
-    // c# using System.jotain käsky on open. Mutta IDisposable using { ... } on use:
-
-    open System.IO
-    let readFirstLine filename =
-        use file = File.OpenText filename
-        //...
-        file.ReadLine() 
-
-    // Virheitä ei yleensä kannata käsitellä. Ohjelmakoodia ei saisi rakentaa virheiden varaan.
-    // Joskus ulkoisten rajapintojen virheet on kuitenkin hyvä ottaa logille.
-    try
-        failwith("Error!")
-    with
-    | :? System.DivideByZeroException -> "Should not happen..."
-    | x -> raise x
-     
-    // Attribuutit merkitään [<...>], esim. Win32 API Interop olisi näin:
-    //    [<DllImport("User32.dll", SetLastError=true)>]
-    //    extern bool MessageBeep(UInt32 beepType);
-    //
-    //    let InterOpSample1() = 
-    //        let r = MessageBeep(0xFFFFFFFFu)
-    //        printfn "message beep result = %A" r
-
-
-module M8_Syvemmälle = 
-    (*
-    8. "Advanced juttuja"
-     - Event-käsittely
-     - Quotations
-     - Numeric literals
-     - Builder pattern (computational expressions, monads)
-     - Agents: Mailbox processor
-    *)
-
-    // Oletuksena F# tukee reaktiivista ohjelmointia, ja sitä voi laajentaa halutessaan esim. Microsoft Reactive Extensionilla
-    // Tässä eventit ovat ikuinen laiska lista, joka täyttyy sitä mukaa kun tapahtumia tulee, ja siitä filtteröidään kiinnostavat...
-    let myEvent = new Microsoft.FSharp.Control.Event<int>()
-
-    let myListener = 
-            myEvent.Publish 
-            |> Event.filter(fun i -> i % 2 = 0)
-            |> Observable.add(fun x -> printfn "Kuulin %d" x)
-
-    [0 .. 5] |> List.iter (fun i -> myEvent.Trigger i)
-    //    Kuulin 0
-    //    Kuulin 2
-    //    Kuulin 4
-
-
-    // Quotations, voidaan siirtää F#-kieltä päättelypuina esim. muihin kieliin.
-    let tyypitettyExpressio = <@ 1 + 1 @>
-    let tyypittämätönExpressio = <@@ 1 + 1 @@>
-    let f x = x+1
-    let example = <@ f @>
-
-    // Numeric literals (varatut: Q, R, Z, I, N, G), DSL-kieliin, kun halutaan tehdä omat aritmeettiset operaatiot.
-    // Usein käytetään määrittelemällä ensin oma jäsennelty unioni ja ylikuormittamalla sen metodeita
-    // (siten sopisivat mainiosti myös ylempänä olleeseen validointi-esimerkkiin).
-    module NumericLiteralN =
-        let FromZero() = ""
-        let FromOne() = "."
-        let FromInt32 x = String.replicate x "."
-
-    // Calls FromOne():
-    let x1 = 1N 
-    // val x1 : string = "."
-
-    // Calls FromInt32(7):
-    let x2 = 7N
-    // val x1 : string = "......."
-
-    //Calls operator (+) on strings.
-    let x3 = 2N + 3N
-    // val x3 : string = "....."
-
-
-    // Builder pattern (computational expressions, monads)
-
-    // F#:ssa on oletuksena muutamia aihealueita/konteksteja, joiden toiminnallisuutta voi ohjelmoida normaaliin tapaan, tietämättä 
-    // miten ne oikeasti toimivat. Yksi tälläinen on aiemmin esillä ollut seq { ... } ja toinen on asynkroninen async { ... }
-    // Näitä voi tehdä itse lisää, nyt näytetään miten. 
-
-    // Kapseli, vastaava kuin Async<T>, IEnumerable<T>, jne:
-    type SataKertainen(n:int) =
-        member x.Arvo = n
-        with //Sivuvaikutus vasta kun arvo haetaan ulos tyypistä:
-            override x.ToString() = (string)(x.Arvo * 100)
-
-    // Konteksti: 
-    type KontekstiBuilder() =        
-        member t.Return(x) = SataKertainen(x)
-        member t.Bind(x:SataKertainen, rest) = 
-            printfn "Kurkattiin %d" x.Arvo 
-            rest(x.Arvo)
-
-    let konteksti = KontekstiBuilder()
-
-    let test =
-        konteksti{
-            let! a = SataKertainen(3) //"let!" kutsuu builderin Bind
-            let! b = SataKertainen(5) //"let!" kutsuu builderin Bind
-
-            //Kontekstin sisällä ohjelmoidaan välittämättä SataKertaisista:
-            let mult = a * b   
-            let sum = mult + 1 
-
-            return sum //"return" kutsuu builderin Return(x)
-        }
-
-    // Kontekstin sisällä huutomerkki-käskyt ("syntaktisokeria") ohjaavat builder-"rajapinnan" vastaaviin metodeihin.
-    // "Rajapinnasta" ei tarvitse täyttää kuin oleelliset metodit. Homma perustuu continuationiin (tarkemmin: call-cc) ja reify:yn.
-    // Tarkempi kuvaus niistä ja rajapinnan sisäisestä toiminnasta löytyy netistä.
-    // http://msdn.microsoft.com/en-us/library/dd233182.aspx
-    // http://blogs.msdn.com/b/dsyme/archive/2007/09/22/some-details-on-f-computation-expressions-aka-monadic-or-workflow-syntax.aspx
-
-
-
-    // MailboxProcessor, perustuu Agents-ohjelmointimalliin, vähän kuin oma async tausta-thread ylläpitämään tilaa.
-    // Ideana, että voidaan synkronoida asioita ilman lukkoja tai sivuvaikutuksia: Agentti ei paljasta mutable-muuttujia ulos.
-    open System
-
-    type Metodit =
-    | Lisää of string
-    | HaeKaikki of AsyncReplyChannel<string list>
-
-    type Varasto() =
-        let varasto = MailboxProcessor.Start(fun komento ->
-            let rec msgPassing kaikki =
-                async { let! k = komento.Receive()
-                        match k with
-                        | Lisää(juttu) ->
-
-                            return! msgPassing(juttu :: kaikki)
-                        | HaeKaikki(reply) ->
-
-                            reply.Reply(kaikki)
-                            return! msgPassing(kaikki)
-                }
-            msgPassing [])
-
-        member x.Tallenna item =  
-            item |> Lisää |> varasto.Post
-            "saved"
-
-        member x.Inventaario() = 
-            async {
-                let! tuotteet = varasto.PostAndAsyncReply(fun rep -> HaeKaikki(rep))
-                tuotteet |> List.rev |> List.iter(printfn "%s")
-            } |> Async.Start
-
-    let v = new Varasto()
-    v.Tallenna("viivotin") |> ignore
-    v.Tallenna("kirja") |> ignore
-    v.Inventaario()
-<<<<<<< HEAD
-
-=======
->>>>>>> remotes/Thorium/fsharptraining.fi/master
