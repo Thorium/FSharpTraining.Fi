@@ -547,8 +547,9 @@ module M6_LoopitJaListaOperaatiot =
       seq { yield value; 
             yield! iterate f (f value) }
     
-    let xs = iterate (fun f-> f+1) 0
+    let xs = iterate (fun f-> f 1) 0
              |> Seq.take(10) |> Seq.toList
+
     // val x : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
 
     // seq { ... } ja muihin Computation Expressioneihin (monad) palataan myöhemmin...

@@ -1,5 +1,4 @@
-﻿// namespace FSharpTrainin
-#r "System.Net.dll"
+﻿#r "System.Net.dll"
 (* 
 Esimerkki perustuu Tomas Petricekic koodifragmenttiin, joka löytyy osoitteesta http://fssnip.net/6e
 
@@ -132,13 +131,17 @@ module ASyncLister =
     // F#:n async-laskentailmaus (computational expression) tekee asynkronisesta ohjelmoinnista huomattavasti 
     // helpompaa kuin mitä olisi monilla muilla kielillä tekemällä asynkronisesti suoritettavasta koodista huomattavasti 
     // helppolukuisempaa ja tiiviimpää.
-    let asyncHandleRequest (ctx:HttpListenerContext) = async {
-        let wc = new WebClient()
-        try
-            let! data = wc.AsyncDownloadData(getProxyUrl(ctx))
-            do! ctx.Response.OutputStream.AsyncWrite(data) 
-        with e ->
-            do! asyncHandleError ctx e }
+    let asyncHandleRequest (ctx:HttpListenerContext) = 
+        async {
+            let wc = new WebClient()
+            try
+                let! data = wc.AsyncDownloadData(getProxyUrl(ctx))
+                do! ctx.Response.OutputStream.AsyncWrite(data) 
+                do! async{ctx.Response.OutputStream.Close()}
+            with e ->
+                do! asyncHandleError ctx e 
+        }
+
 
     /// Tämä käynnistää http liikenteen kuuntelijan. Muista sulkea se funktiolla Stop. Toista kuuntelijaa ei voi käynnistää samaan porttiin. 
     /// (Asiaan mitenkään liittymättä: kolmea kauttaviivaa '///' voi käyttää metodien dokumentoimiseen. Kun hiiren vie alla olevan metodin päälle näkee tämän rivin.)

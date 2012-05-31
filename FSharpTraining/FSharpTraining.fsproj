@@ -43,6 +43,7 @@
     <None Include="01-Basics.fsx" />
     <None Include="02-AsyncExample1.fsx" />
     <None Include="03-GraphColoringExample.fsx" />
+    <None Include="04-MoreAdvancedStuff.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
