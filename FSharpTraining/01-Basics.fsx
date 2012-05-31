@@ -136,7 +136,7 @@ module M2_TunnisteetJaLiteraalit_Osa2_Lisäkikkailua =
     // %s = merkkijono
     // %O = objekti 
     // %A = taulukko"
-    printfn "%d %f %s %O %A" x y str list array 
+    printfn "%d %f %s %O %A" 2 3.0 "moi" [1;2;3] [|4;5;6|] 
     // (tai .NET-perinteisesti System.Console.WriteLine)
 
 module M3_Funktiot = 
