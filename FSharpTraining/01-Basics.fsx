@@ -92,7 +92,20 @@ module M2_TunnisteetJaLiteraalit =
     let tupple2 = 1,"k"
     // Ja tuplen voi purkaa kivasti:
     let eka, toka = tupple2
+
+module M2_TunnisteetJaLiteraalit_Osa2_Lisäkikkailua = 
     
+    // Castausta ei tietenkään suositella, koska tyyppit hoituvat itsekseen. 
+    // Jos sitä tarvii, niin näin sen voi tehdä:
+    let myObject1 = box("juttu")
+    let myString1 = unbox<string>(myObject1)
+    let myObject2 :obj = upcast "juttu"
+    let myString2 :string = downcast myObject2
+    let myObject3 = "juttu" :> obj
+    let myString3 = myObject3 :?> string
+    let integerType = typeof<int>
+
+
     // Välimerkkejä voi käyttää, jos haluaa pitkiä muuttujia:
     let ``tämä vakio vaatii välimerkkejä ja on pitkä, mutta selkeä`` = "juttu"
 
@@ -131,6 +144,7 @@ module M3_Funktiot =
 
     Teemat
      - funktiot ovat ensimmäisen luokan kansalaisia
+     - Yhdistetty funktio
      - currying
      - rekursio
     *)
@@ -150,7 +164,22 @@ module M3_Funktiot =
     lisää_viiteen 7
 
     // Tämä on konseptina suurempi abstraktio kuin C# optionaaliset parametrit, ja mahdollistaa paremman laiskan evaluoinnin.
-    
+
+    //Sama plus voidaan ilmaista näin:
+    let plus2 = (+)
+
+    //fun on varattu sana Lambda-expressioille. Sama plus voidaan ilmaista siis myös näin:
+    let plus3 = (fun x -> fun y -> x + y)
+
+    // Yhdistetty funktio, function composition
+    // Funktioita voidaan yhdistellä, eli jos on funktio h joka kutsuu parametrilla x ensin funktiota f ja sitten funktiota g:
+    let h f g x = g(f(x))
+    // tämä voidaan merkitä myös:
+    let h f g x = (f>>g)x
+    // tällöin pääsemme eroon parametrista:
+    let h f g = f>>g
+    // Tämä mahdollistaa top-down-koodauksen tuntematta parametreja: let prosessoi = tallenna >> validoi >> lähetä
+    // Tähän palataan listojen yhteydessä...
 
     // Rekursiivisen function esittelyyn pitää lisätä rec (pitkälti F# vahvan tyypityksen takia): 
     // Rekursiolla ei ole vaikutusta funktion tyyppiin (eli se ei vaihdu).
@@ -236,7 +265,7 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     *)
 
     // Kääntäjä tyypittää automaattisesti, 'a -> string on funktio joka ottaa geneerisen tyypin sisään ja palauttaa stringin ulos:
-    let Method1(input) = 
+    let Method1 input = 
         input.ToString()
     //val Method2 : 'a -> string
     
@@ -251,9 +280,15 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi =
     // Generics:
     let Method3(input:'t) =
         input.ToString()
+    //val Method2 : 't -> string
 
     // Generics .NET-tapaan eksplisiittisesti:
     let Method4<'t>(input:'t) =
+        input.ToString()
+
+    // Kääntäjä tekee tarvittaessa inline-funktion kaikkiin missä kyseistä käytetään:
+    // (Todella geneerinen mutta suorituskyvyltä huono)
+    let inline Method5 input = 
         input.ToString()
 
     // Lista-parametri OCaml-tapaan eksplisiittisesti: 
@@ -421,33 +456,66 @@ module M5_TyypitJaObjektiOrientoitunutOhjelmointi_Osa2 =
 
 module M6_LoopitJaListaOperaatiot = 
     (*
-    5. Loopit ja listaoperaatiot
+    6. Loopit ja listaoperaatiot
      - for
      - komentojen putkitus (pipelines)
      - Seq ja List -operaatiot
     *)
+
+    //             Immutable items  Immutable list  Element lookup
+    //F# list        Kyllä!           Kyllä!          O(n), eli O(1) listan alkuun
+    //Array          Ei               Kyllä!          O(1)
+    //Generic List   Ei               Ei              O(1)
+
+    // Best practice on käyttää listoja immutableina (ei muuttaa arvoja) ja ei viitata suoraa indekseihin.
+    // Sen sijaan että poistat listasta alkion, tee uusi lista, josta on suodatettu poistettava alkio.
 
     // Klassinen for loopi toimii näin:
     let simpleList = [1 .. 10]
     for i in simpleList  do
         printfn "Jee %d" i
 
-    // Usein for loopeja tehokkaampaa ja elegantimpaa on putkittaa komentoja. |> operaattorilla
-    // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin vielä selvennä juurikaan koodia.)
-    simpleList |> List.iter (printfn "Jee %d") 
-
     // For looppi voi käyttää listojen generointiin. 
     open System
     let firstday2012 = new System.DateTime(2012,1,1)
     let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
 
+    // sequenssi voidaan tehdä myös yield-käskyllä, joka on sama kuin muualla .NET:issä.
+    // F# tukee seq-operaatioissa myös yield! joka yieldaa koko setin osaksi paluuarvoa:
+    let rec iterate f value = 
+      seq { yield value; 
+            yield! iterate f (f value) }
+    
+    let xs = iterate (fun f-> f+1) 0
+             |> Seq.take(10) |> Seq.toList
+    // val x : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
+
     // seq { ... } ja muihin Computation Expressioneihin (monad) palataan myöhemmin...
+
+    // Usein for loopeja tehokkaampaa ja elegantimpaa on putkittaa komentoja. |> operaattorilla
+    // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin vielä selvennä juurikaan koodia.)
+    simpleList |> List.iter (printfn "Jee %d") 
+
+    // Koontifunktioiden (Aggregate) "isä" on fold:
+    simpleList |> List.fold (+) 0
+
+    // Yksittäiseen alkioon viittaaminen, ei yleensä tarvetta:
+    let fourth = simpleList.[3]
 
     // Kun loopin logiikka monimutkaistuu, komentojen putkitus alkaa selkeyttämään koodia enevässä määrin.
     // Funktionaalinen ohjelmointiparadigma on vahvimmillaan nimenomaan monimutkaisten ongelmien parissa puuhatessa.
     year2012 
     |> Seq.filter (fun day -> day.DayOfWeek = DayOfWeek.Friday && day.Day = 13)
     |> Seq.iter (printfn "%O")
+
+    // Yhdistefunktion esimerkki, itse lista voidaan määrittää jälkikäteen ilman parametreja:
+    let prosessoi =  List.filter (fun x -> x > 4) >> List.map (fun y -> y+1) >> List.iter(printfn "%d")
+    prosessoi [1..10]
+    prosessoi [8..-2..4]
+
+    // Operaatiokirjasto on vähän monipuolisempi kuin LINQ, joten sillä pääsee pitkälle.
+    // Kun voima loppuu kesken, astuu kuviin rekursio ja pattern matching.
+
 
     // Seuraavassa esimerkissä näytetään tämän vuoden perjantai 13. -päivät ja milloin vastaava päivämäärä on perjantai seuraavan kerran.
     let rec findNextSameFriday13 (day : DateTime) =
@@ -457,8 +525,8 @@ module M6_LoopitJaListaOperaatiot =
         | _ -> findNextSameFriday13 next
     
     year2012 
-    |> Seq.filter (fun day -> day.DayOfWeek = DayOfWeek.Friday && day.Day = 13)
-    |> Seq.map (fun day -> (day, findNextSameFriday13 day))
+    |> Seq.filter (fun day -> day.DayOfWeek = DayOfWeek.Friday && day.Day = 13)  //Suodatus: filter = "where/reduce/..."
+    |> Seq.map (fun day -> (day, findNextSameFriday13 day))  //Mappaus tyypistä toiseen: "projektio/select/..."
     |> Seq.iter(fun (day2012, dayN) ->  (printfn "%O on seuraavan kerran perjantai 13. vuonna %d" day2012 dayN.Year))
 
     // F# sallii äärettömät sekvenssit. Seuraava funktio etsii ensimmäisen perjantaina joka on kolmastoista päivä ja jolle 
@@ -476,14 +544,200 @@ module M6_LoopitJaListaOperaatiot =
     // 3. Lopuksi iteroidaan sekvenssiä läpi kunnes ehdot täyttävä päivä löytyy.
     fri13seq |> Seq.skipWhile (fun day -> day.Year * day.Month * day.Day < 1000000) |> Seq.head
 
-    // F# lista on linkitetty lista.
+    // F# lista on oletuksena linkitetty lista, jonka ensimmäiseksi alkioksi lisääminen on tehokas operaatio
+    // (koska lista on muuttumaton ("immutable"), niin uuden alkion lisäys eteen on vain uusi alkio ja pointteri vanhaan listaan)
+    let emptyList = []
+    let listOfListOfIntegers = [[1;2;3];[4;5;6]]
+
     // Listoja voi yhdistellä (merge):
     let merged1to6 = [1;2;3] @ [4;5;6]
+    //val merged1to6 : int list = [1; 2; 3; 4; 5; 6]
 
-    //lisäksi usein käsitellään ensimmäistä alkiota, ja välitetään loput rekursiolle. :: erottaa ensimmäisen alkion ja loput:
+    // lisäksi usein käsitellään ensimmäistä alkiota, ja välitetään loput rekursiolle. :: erottaa ensimmäisen alkion ja loput:
     let mylist = "head" :: ["tail1"; "tail2"]
 
+    // Tyypillinen match koontifunktiolle on jotain tämän suuntaista:
+    // (Yksinkertaistettuna, tämänhän voi tehdä vielä myös perus listaoperaatioilla)
+    let rec sample f x =
+        match x with
+        | [] -> 0
+        | h::t -> f(h) + sample f t 
+
+    // Esim. Fibonacci-lukusarja:
     let rec fibs a b = 
         match a + b with c when c < 10000 -> c :: fibs b c | _ -> [] 
     let fibonacci = 0::1::(fibs 0 1) 
 
+
+    // Matriisit ja moniulotteiset arrayt:
+    Array2D.init 3 3 (fun x y -> x+y)
+    |> Array2D.map (fun a -> a+1)
+    // val it : int [,] = [[1; 2; 3]
+    //                     [2; 3; 4]
+    //                     [3; 4; 5]]
+
+
+module M7_MuutaDotNetSälää = 
+    (*
+    7. .NET yleisiä toiminnallisuuksia
+     - Resurssien käyttö
+     - Virheiden käsittely
+     - Attribuutit
+    *)
+
+    //Resurssien käyttö:
+    // c# using System.jotain käsky on open. Mutta IDisposable using { ... } on use:
+
+    open System.IO
+    let readFirstLine filename =
+        use file = File.OpenText filename
+        //...
+        file.ReadLine() 
+
+    // Virheitä ei yleensä kannata käsitellä. Ohjelmakoodia ei saisi rakentaa virheiden varaan.
+    // Joskus ulkoisten rajapintojen virheet on kuitenkin hyvä ottaa logille.
+    try
+        failwith("Error!")
+    with
+    | :? System.DivideByZeroException -> "Should not happen..."
+    | x -> raise x
+     
+    // Attribuutit merkitään [<...>], esim. Win32 API Interop olisi näin:
+    //    [<DllImport("User32.dll", SetLastError=true)>]
+    //    extern bool MessageBeep(UInt32 beepType);
+    //
+    //    let InterOpSample1() = 
+    //        let r = MessageBeep(0xFFFFFFFFu)
+    //        printfn "message beep result = %A" r
+
+
+module M8_Syvemmälle = 
+    (*
+    8. "Advanced juttuja"
+     - Event-käsittely
+     - Quotations
+     - Numeric literals
+     - Builder pattern (computational expressions, monads)
+     - Agents: Mailbox processor
+    *)
+
+    // Oletuksena F# tukee reaktiivista ohjelmointia, ja sitä voi laajentaa halutessaan esim. Microsoft Reactive Extensionilla
+    // Tässä eventit ovat ikuinen laiska lista, joka täyttyy sitä mukaa kun tapahtumia tulee, ja siitä filtteröidään kiinnostavat...
+    let myEvent = new Microsoft.FSharp.Control.Event<int>()
+
+    let myListener = 
+            myEvent.Publish 
+            |> Event.filter(fun i -> i % 2 = 0)
+            |> Observable.add(fun x -> printfn "Kuulin %d" x)
+
+    [0 .. 5] |> List.iter (fun i -> myEvent.Trigger i)
+    //    Kuulin 0
+    //    Kuulin 2
+    //    Kuulin 4
+
+
+    // Quotations, voidaan siirtää F#-kieltä päättelypuina esim. muihin kieliin.
+    let tyypitettyExpressio = <@ 1 + 1 @>
+    let tyypittämätönExpressio = <@@ 1 + 1 @@>
+    let f x = x+1
+    let example = <@ f @>
+
+    // Numeric literals (varatut: Q, R, Z, I, N, G), DSL-kieliin, kun halutaan tehdä omat aritmeettiset operaatiot.
+    // Usein käytetään määrittelemällä ensin oma jäsennelty unioni ja ylikuormittamalla sen metodeita
+    // (siten sopisivat mainiosti myös ylempänä olleeseen validointi-esimerkkiin).
+    module NumericLiteralN =
+        let FromZero() = ""
+        let FromOne() = "."
+        let FromInt32 x = String.replicate x "."
+
+    // Calls FromOne():
+    let x1 = 1N 
+    // val x1 : string = "."
+
+    // Calls FromInt32(7):
+    let x2 = 7N
+    // val x1 : string = "......."
+
+    //Calls operator (+) on strings.
+    let x3 = 2N + 3N
+    // val x3 : string = "....."
+
+
+    // Builder pattern (computational expressions, monads)
+
+    // F#:ssa on oletuksena muutamia aihealueita/konteksteja, joiden toiminnallisuutta voi ohjelmoida normaaliin tapaan, tietämättä 
+    // miten ne oikeasti toimivat. Yksi tälläinen on aiemmin esillä ollut seq { ... } ja toinen on asynkroninen async { ... }
+    // Näitä voi tehdä itse lisää, nyt näytetään miten. 
+
+    // Kapseli, vastaava kuin Async<T>, IEnumerable<T>, jne:
+    type SataKertainen(n:int) =
+        member x.Arvo = n
+        with //Sivuvaikutus vasta kun arvo haetaan ulos tyypistä:
+            override x.ToString() = (string)(x.Arvo * 100)
+
+    // Konteksti: 
+    type KontekstiBuilder() =        
+        member t.Return(x) = SataKertainen(x)
+        member t.Bind(x:SataKertainen, rest) = 
+            printfn "Kurkattiin %d" x.Arvo 
+            rest(x.Arvo)
+
+    let konteksti = KontekstiBuilder()
+
+    let test =
+        konteksti{
+            let! a = SataKertainen(3) //"let!" kutsuu builderin Bind
+            let! b = SataKertainen(5) //"let!" kutsuu builderin Bind
+
+            //Kontekstin sisällä ohjelmoidaan välittämättä SataKertaisista:
+            let mult = a * b   
+            let sum = mult + 1 
+
+            return sum //"return" kutsuu builderin Return(x)
+        }
+
+    // Kontekstin sisällä huutomerkki-käskyt ("syntaktisokeria") ohjaavat builder-"rajapinnan" vastaaviin metodeihin.
+    // "Rajapinnasta" ei tarvitse täyttää kuin oleelliset metodit. Homma perustuu continuationiin (tarkemmin: call-cc) ja reify:yn.
+    // Tarkempi kuvaus niistä ja rajapinnan sisäisestä toiminnasta löytyy netistä.
+    // http://msdn.microsoft.com/en-us/library/dd233182.aspx
+    // http://blogs.msdn.com/b/dsyme/archive/2007/09/22/some-details-on-f-computation-expressions-aka-monadic-or-workflow-syntax.aspx
+
+
+
+    // MailboxProcessor, perustuu Agents-ohjelmointimalliin, vähän kuin oma async tausta-thread ylläpitämään tilaa.
+    // Ideana, että voidaan synkronoida asioita ilman lukkoja tai sivuvaikutuksia: Agentti ei paljasta mutable-muuttujia ulos.
+    open System
+
+    type Metodit =
+    | Lisää of string
+    | HaeKaikki of AsyncReplyChannel<string list>
+
+    type Varasto() =
+        let varasto = MailboxProcessor.Start(fun komento ->
+            let rec msgPassing kaikki =
+                async { let! k = komento.Receive()
+                        match k with
+                        | Lisää(juttu) ->
+
+                            return! msgPassing(juttu :: kaikki)
+                        | HaeKaikki(reply) ->
+
+                            reply.Reply(kaikki)
+                            return! msgPassing(kaikki)
+                }
+            msgPassing [])
+
+        member x.Tallenna item =  
+            item |> Lisää |> varasto.Post
+            "saved"
+
+        member x.Inventaario() = 
+            async {
+                let! tuotteet = varasto.PostAndAsyncReply(fun rep -> HaeKaikki(rep))
+                tuotteet |> List.rev |> List.iter(printfn "%s")
+            } |> Async.Start
+
+    let v = new Varasto()
+    v.Tallenna("viivotin") |> ignore
+    v.Tallenna("kirja") |> ignore
+    v.Inventaario()
