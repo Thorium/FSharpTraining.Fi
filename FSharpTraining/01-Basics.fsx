@@ -168,7 +168,7 @@ module M3_Listat =
     // Useat muuttujam esittely samalla rivillä hyödyntää monikkoa:
     let a, b, c = "a", "b", "c" 
 
-module M3_Funktiot = 
+module M4_Funktiot = 
     (*
     3. Funktiot
 
@@ -220,7 +220,7 @@ module M3_Funktiot =
     // Miksi? Koska +-operaattori paitsi operaattori myös funktion ja sillä on tyyppi (ja muuttujaan sijoitettuna arvo):
     (+).GetType()
 
-module M4_Generics = 
+module M5_Generics = 
     // Toisin kuin C#:ssa, F#:ssa kääntäjä generalisoi koodia automaattisesti.
     // Alla olevan funtion tyyppi on 'a -> string. 'a on funktio, joka ottaa geneerisen tyypin sisään ja palauttaa stringin ulos:
     let Method1 input = 
@@ -253,7 +253,7 @@ module M4_Generics =
     Method5 "string"
     Method5 1
 
-module M4_Generics_Vertailua = 
+module M6_Generics_Vertailua = 
     // Lista-parametri OCaml-tapaan eksplisiittisesti: 
     let l2 : int list = [1;2;3]
 
@@ -272,7 +272,7 @@ module M4_Generics_Vertailua =
     let myThree1 = MyType1("something")
     let myThree2 = MyType2("something")
 
-module M5_Rekursio = 
+module M7_Rekursio = 
     // Rekursiivisen function esittelyyn pitää lisätä rec (pitkälti F# vahvan tyypityksen takia): 
     // Rekursiolla ei ole vaikutusta funktion tyyppiin (eli se ei vaihdu).
     // Huomaa, että funktion voi määritellä myös toisen funktion sisään. Rekursiivisten functioden osalta tämä on näppärä sääntö.
@@ -298,24 +298,7 @@ module M5_Rekursio =
     factorialPlusNonTail  5L // 5 + 4 + 3 + 2 + 1 = 15
     factorialPlusNonTail  20000000L // Process is terminated due to StackOverflowException.
 
-module MX_FunctionComposition = 
-    // Yhdistetty funktio (function composition)
-    // Funktioita voidaan yhdistellä, eli jos on funktio h joka kutsuu parametrilla x ensin funktiota f ja sitten funktiota g:
-    let h f g x = g(f(x))
-    // tämä voidaan merkitä myös:
-    let h2 f g x = (f>>g)x
-    // tällöin pääsemme eroon parametrista:
-    let h3 f g = f>>g
-    // Tämä mahdollistaa top-down-koodauksen tuntematta parametreja: let prosessoi = tallenna >> validoi >> lähetä:
-    // Riippuvaisuuksien parametroiminen (dependency injection) on aivan eri tavalla mahdollista kuin C#:ssa
-
-    let initProsess(receive : 'input -> 'saveStatus * string) (validate : 'saveStatus * string-> 'validateStaus * string) (save: 'validateStaus * string -> unit) =
-        receive >> validate >> save
-    let p = initProsess (fun input -> "ok", input) (fun (saveStatus,input) -> "ok ok", input) (fun (valStatus,input) -> printfn "Send: %s" input)
-    p "Syöte"
-    p "Syöte2"    // Tähän palataan tarkemmin listojen yhteydessä.
-
-module M4_PatternMatching = 
+module M8_PatternMatching = 
     (*
     4. Pattern matching vaihtoehtona if-elselle 
      
@@ -363,7 +346,7 @@ module M4_PatternMatching =
     TestNumber 4
     TestNumber 7
 
-module M5_TyypitJaOlioOrientoitunutOhjelmointi = 
+module M9_TyypitJaOlioOrientoitunutOhjelmointi = 
     (*
     5. Tyypit 
     *)
@@ -407,7 +390,7 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi =
     let myString3 = myObject3 :?> string
     let integerType = typeof<int> // kuten C#:n typeof()    
 
-module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki = 
+module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki = 
     // Alla oleva esimerkki havainnollistaa kuinka klassinen validointi dekoraattori on mahdollista toteuttaa 
     // olio-orientoituneesti käyttäen luokkia ja rajapintoja. Seuraavassa esimerkissä haviannollistetaan 
     // kuin saman voi toteuttaa suunnilleen yhtä olio-orientoituneesti käyttämättä suoranaisesti 
@@ -536,7 +519,7 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     complexValidator3.Validate 8 // false
     complexValidator3.Validate 12 // true
       
-module M6_LoopitJaListaOperaatiot = 
+module M11_LoopitJaListaOperaatiot = 
     (*
     6. Loopit ja listaoperaatiot
      - for

@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BowlingGame.TestsAndAbstractions.fs" />
-    <Compile Include="BowlingGame.Solution.fs" />
     <Compile Include="BowlingGame.Exercise.fs" />
+    <Compile Include="BowlingGame.Solution.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

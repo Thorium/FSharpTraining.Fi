@@ -1,4 +1,21 @@
-﻿module M7_MuutaDotNetSälää = 
+﻿module M1_FunctionComposition = 
+    // Yhdistetty funktio (function composition)
+    // Funktioita voidaan yhdistellä, eli jos on funktio h joka kutsuu parametrilla x ensin funktiota f ja sitten funktiota g:
+    let h f g x = g(f(x))
+    // tämä voidaan merkitä myös:
+    let h2 f g x = (f>>g)x
+    // tällöin pääsemme eroon parametrista:
+    let h3 f g = f>>g
+    // Tämä mahdollistaa top-down-koodauksen tuntematta parametreja: let prosessoi = tallenna >> validoi >> lähetä:
+    // Riippuvaisuuksien parametroiminen (dependency injection) on aivan eri tavalla mahdollista kuin C#:ssa
+
+    let initProsess(receive : 'input -> 'saveStatus * string) (validate : 'saveStatus * string-> 'validateStaus * string) (save: 'validateStaus * string -> unit) =
+        receive >> validate >> save
+    let p = initProsess (fun input -> "ok", input) (fun (saveStatus,input) -> "ok ok", input) (fun (valStatus,input) -> printfn "Send: %s" input)
+    p "Syöte"
+    p "Syöte2"    // Tähän palataan tarkemmin listojen yhteydessä.
+
+module M2_IO = 
     (*
     7. .NET yleisiä toiminnallisuuksia
      - Resurssien käyttö
@@ -15,6 +32,7 @@
         //...
         file.ReadLine() 
 
+module M3_Exceptions = 
     // Virheitä ei yleensä kannata käsitellä. Ohjelmakoodia ei saisi rakentaa virheiden varaan.
     // Joskus ulkoisten rajapintojen virheet on kuitenkin hyvä ottaa logille.
     try
@@ -22,17 +40,8 @@
     with
     | :? System.DivideByZeroException -> "Should not happen..."
     | x -> raise x
-     
-    // Attribuutit merkitään [<...>], esim. Win32 API Interop olisi näin:
-    //    [<DllImport("User32.dll", SetLastError=true)>]
-    //    extern bool MessageBeep(UInt32 beepType);
-    //
-    //    let InterOpSample1() = 
-    //        let r = MessageBeep(0xFFFFFFFFu)
-    //        printfn "message beep result = %A" r
 
-
-module M8_Syvemmälle = 
+module M4_TapahtumatJaReaktiivinenOhjelmointi= 
     (*
     8. "Advanced juttuja"
      - Event-käsittely
@@ -57,6 +66,36 @@ module M8_Syvemmälle =
     //    Kuulin 4
 
 
+
+module M5_Win32APIInterop  =      
+    open System
+    open System.Runtime.InteropServices
+    // Attribuutit merkitään [<...>], esim. Win32 API Interop olisi näin:
+    [<DllImport("User32.dll", SetLastError=true)>]
+    extern bool MessageBeep(UInt32 beepType);
+    
+    let InterOpSample1() = 
+        let r = MessageBeep(0xFFFFFFFFu)
+        printfn "message beep result = %A" r
+    InterOpSample1 ()
+
+
+module M6_TapahtumatJaReaktiivinenOhjelmointi = 
+    // Oletuksena F# tukee reaktiivista ohjelmointia, ja sitä voi laajentaa halutessaan esim. Microsoft Reactive Extensionilla
+    // Tässä eventit ovat ikuinen laiska lista, joka täyttyy sitä mukaa kun tapahtumia tulee, ja siitä filtteröidään kiinnostavat...
+    let myEvent = new Microsoft.FSharp.Control.Event<int>()
+
+    let myListener = 
+            myEvent.Publish 
+            |> Event.filter(fun i -> i % 2 = 0)
+            |> Observable.add(fun x -> printfn "Kuulin %d" x)
+
+    [0 .. 5] |> List.iter (fun i -> myEvent.Trigger i)
+    //    Kuulin 0
+    //    Kuulin 2
+    //    Kuulin 4
+
+ module M7_Quotations = 
     // Quotations, voidaan siirtää F#-kieltä päättelypuina esim. muihin kieliin.
     let tyypitettyExpressio = <@ 1 + 1 @>
     let tyypittämätönExpressio = <@@ 1 + 1 @@>
@@ -80,12 +119,9 @@ module M8_Syvemmälle =
     // val x1 : string = "......."
 
     //Calls operator (+) on strings.
-    let x3 = 2N + 3N
-    // val x3 : string = "....."
+    let x3 = 2N + 3N  // val x3 : string = "....."
 
-
-    // Builder pattern (computational expressions, monads)
-
+ module M8_BuilderPatternAndComputationalExpressions = 
     // F#:ssa on oletuksena muutamia aihealueita/konteksteja, joiden toiminnallisuutta voi ohjelmoida normaaliin tapaan, tietämättä 
     // miten ne oikeasti toimivat. Yksi tälläinen on aiemmin esillä ollut seq { ... } ja toinen on asynkroninen async { ... }
     // Näitä voi tehdä itse lisää, nyt näytetään miten. 
