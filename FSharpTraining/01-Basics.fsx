@@ -493,18 +493,9 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     // jotka palauttavat jotain muuta kuin booleanin.  (op_BooleanAnd toimisi, mutta return-tyyppi on väärä)
     // Käytössä ovat esim.  &&& ja |||  tai  +& ja +|  mutta molemmat ovat hieman kryptisiä nimiä, mutta 
     // parempi kuin ei mitään 
-
-    // F# luokkia on mahdollista laajentaa lennosta with avain sanalla. 
-    //
-    // Rakenne muistuttaa kaukaisesti C#:n extension metodeja tai mahdollisuutta esitellä luokka useassa eri tiedostossa
-    // käyttäen partial määrettä luokassa. Koodi on edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta 
-    // ei hyödynnetä tätä ennen.
-    // 
-    // Alla oleva koodi laajentaa ValidateInt tyyppi kahdella operaattorilla (C#:n extension metodit eivät tähän taivu):
-    type ValidateInt with 
-        static member (&&&) (fst:ValidateInt, snd : ValidateInt) =
+    let inline (&&&) (fst:ValidateInt) (snd : ValidateInt) =
             ValidateInt.And (fst,snd)
-        static member (|||) (fst:ValidateInt, snd:ValidateInt) =
+    let inline (|||) (fst:ValidateInt) (snd:ValidateInt) =
             ValidateInt.Or (fst,snd)
 
     let complexValidator2 = 
@@ -515,7 +506,33 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     complexValidator2.Validate 13 // false
     complexValidator2.Validate 8 // false
     complexValidator2.Validate 12 // true
-  
+
+    // F# luokkia on mahdollista laajentaa lennosta with avain sanalla. 
+    //
+    // Rakenne muistuttaa kaukaisesti C#:n extension metodeja tai mahdollisuutta esitellä luokka useassa eri tiedostossa
+    // käyttäen partial määrettä luokassa. Koodi on edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta 
+    // ei hyödynnetä tätä ennen.
+    type ValidateInt with
+        static member Any (alternatives:ValidateInt list) = 
+            alternatives 
+            |> List.fold 
+                (fun (state : ValidateInt option) (current:ValidateInt) -> 
+                    match state with 
+                    | Some acc -> Some (current ||| acc) 
+                    | None -> Some current) None
+            |> fun this -> match this with Some v -> v | None  -> Predicate (fun i -> true)
+    
+    let complexValidator3 = 
+        let isOddValidator = ValidateInt.Predicate (fun x -> (x % 2) = 1)
+        let isEvenValidator = ValidateInt.Predicate (fun x -> (x % 2) = 0)
+        let is23Validator = ValidateInt.Predicate (fun x -> x = 23)
+        ValidateInt.Any [is23Validator; (GreaterThan 10 &&& isEvenValidator);  (LessThan 10 &&& isOddValidator)]
+    complexValidator3.Validate 9 // true
+    complexValidator3.Validate 13 // false
+    complexValidator3.Validate 23 // true
+    complexValidator3.Validate 8 // false
+    complexValidator3.Validate 12 // true
+      
 module M6_LoopitJaListaOperaatiot = 
     (*
     6. Loopit ja listaoperaatiot
