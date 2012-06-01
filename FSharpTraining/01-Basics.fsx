@@ -82,7 +82,7 @@ module M2_LiteraalitJaTunnisteet =
     // tunniteen tyypin voi määittää syntaksilla let nimi : tyyppi
     let x2 : System.Int64 = 1L // 64 bittinen kokonaisluku 
     let y : float = 1.0  // System.Double, 64 bittinen liukuluku; C#:ssa double, F# float (HUOM!)
-    let y = 1.0f // System.Single, 32 bittinen liukuluku; C#:ssa float, F#:ssa float32 (HUOM!)
+    let y3 = 1.0f // System.Single, 32 bittinen liukuluku; C#:ssa float, F#:ssa float32 (HUOM!)
     let str = "merkkijono"
     let chr = 'm'
     
@@ -123,7 +123,7 @@ module M2_LiteraalitJaTunnisteet =
     // voi muuttaa. Esim. primitiivi tyypit. string ja DateTime. Muutettavissa-olevat tyyppi (mutable type) on 
     // sellainen, jonka instanssien tila voi muokata (suurin osa .NET:n Frameworkin luokista). 
     // Ohjelmoijan näkökulmasta seuraava on käytännössö vakio:
-    let Vakio = 1 
+    let Vakio2 = 1 
                                                                                                     
 module M3_Listat =     
     // Listat ja taulukot
@@ -303,9 +303,9 @@ module MX_FunctionComposition =
     // Funktioita voidaan yhdistellä, eli jos on funktio h joka kutsuu parametrilla x ensin funktiota f ja sitten funktiota g:
     let h f g x = g(f(x))
     // tämä voidaan merkitä myös:
-    let h f g x = (f>>g)x
+    let h2 f g x = (f>>g)x
     // tällöin pääsemme eroon parametrista:
-    let h f g = f>>g
+    let h3 f g = f>>g
     // Tämä mahdollistaa top-down-koodauksen tuntematta parametreja: let prosessoi = tallenna >> validoi >> lähetä:
     // Riippuvaisuuksien parametroiminen (dependency injection) on aivan eri tavalla mahdollista kuin C#:ssa
 
@@ -492,7 +492,9 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     // Harmittavasti CLI (Common Language Infrastructure) ei anna määrittää && tai || operaattoreja 
     // jotka palauttavat jotain muuta kuin booleanin.  (op_BooleanAnd toimisi, mutta return-tyyppi on väärä)
     // Käytössä ovat esim.  &&& ja |||  tai  +& ja +|  mutta molemmat ovat hieman kryptisiä nimiä, mutta 
-    // parempi kuin ei mitään 
+    // parempi kuin ei mitään.
+    //
+    // Uusia operaattoreja voi määrittää osana luokan esittelyä tai globaalisti sen esittelyn jälkeen:
     let inline (&&&) (fst:ValidateInt) (snd : ValidateInt) =
             ValidateInt.And (fst,snd)
     let inline (|||) (fst:ValidateInt) (snd:ValidateInt) =
@@ -507,10 +509,10 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     complexValidator2.Validate 8 // false
     complexValidator2.Validate 12 // true
 
-    // F# luokkia on mahdollista laajentaa lennosta with avain sanalla. 
+    // F# luokkia on mahdollista laajentaa lennosta with-avainsanalla. 
     //
-    // Rakenne muistuttaa kaukaisesti C#:n extension metodeja tai mahdollisuutta esitellä luokka useassa eri tiedostossa
-    // käyttäen partial määrettä luokassa. Koodi on edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta 
+    // Rakenne muistuttaa kaukaisesti C#:n laajennus metodeja (extension methods) tai mahdollisuutta esitellä luokka useassa 
+    // eri tiedostossa käyttäen partial määrettä luokassa. Koodi on edelleen vahvasti tyypitettyä, sillä tätä tyyppilaajennusta 
     // ei hyödynnetä tätä ennen.
     type ValidateInt with
         static member Any (alternatives:ValidateInt list) = 
@@ -521,8 +523,9 @@ module M5_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
                     | Some acc -> Some (current ||| acc) 
                     | None -> Some current) None
             |> fun this -> match this with Some v -> v | None  -> Predicate (fun i -> true)
+        member x.OrAny (alternatives:ValidateInt list) = ValidateInt.Any (x :: alternatives)            
     
-    let complexValidator3 = 
+    let complexValidator3 =
         let isOddValidator = ValidateInt.Predicate (fun x -> (x % 2) = 1)
         let isEvenValidator = ValidateInt.Predicate (fun x -> (x % 2) = 0)
         let is23Validator = ValidateInt.Predicate (fun x -> x = 23)
@@ -628,6 +631,8 @@ module M6_LoopitJaListaOperaatiot =
     // (koska lista on muuttumaton ("immutable"), niin uuden alkion lisäys eteen on vain uusi alkio ja pointteri vanhaan listaan)
     let emptyList = []
     let listOfListOfIntegers = [[1;2;3];[4;5;6]]
+
+
 
     // Listoja voi yhdistellä (merge):
     let merged1to6 = [1;2;3] @ [4;5;6]
