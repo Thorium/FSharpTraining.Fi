@@ -110,7 +110,7 @@ module M2_LiteraalitJaTunnisteet =
     // usealla ytimellä ongelma räjähtää helposti käsiin. Tässä mielessä ei-muokattavissa olevat tunnisteet 
     // on parempi oletusarvo kuin se, että tunnisteet ovat oletuksena muutettavia.
 
-    // Ei-muutettavuus ei C# näkökulmasta tarkoita sitä, että kyseessä olisi vakio. Tunnisteen arvo ei leivota sisään
+    // Ei-muutettavuus ei C# näkökulmasta tarkoita sitä, että kyseessä olisi vakio. Tunnisteen arvoa ei leivota sisään
     // luokkakirjaston CIL-koodiin; sitä ei vaan voi muuttaa sen jälkeen kun se on kerran asetettu. 
            
     // Itse asissa tarkasti ottaen F# koodissa ei juurikaan käytetä C#-vakiota vastaavaa rakennetta. C#:n:
@@ -120,24 +120,24 @@ module M2_LiteraalitJaTunnisteet =
     let Vakio = 1
     // Yleistäen ja mutkia oikoen: muuttuja = muutettavissa-oleva tunniste (mutable identifier) ja vakio = ei-muutettava 
     // tunniste (immutable identifier). Ei-muutettava tyyppi (immutable type) on sellainen jonka instanssien tilaa ei 
-    // voi muuttaa. Esim. primitiivi tyypit. string ja DateTime. Muutettavissa-olevat tyyppi (mutable type) on 
+    // voi muuttaa. Esim. primitiivi tyypit, string ja DateTime. Muutettavissa-olevat tyyppi (mutable type) on 
     // sellainen, jonka instanssien tila voi muokata (suurin osa .NET:n Frameworkin luokista). 
-    // Ohjelmoijan näkökulmasta seuraava on käytännössö vakio:
+    // Siis, ohjelmoijan näkökulmasta seuraava on käytännössö vakio:
     let Vakio2 = 1 
                                                                                                     
 module M3_Listat =     
     // Listat ja taulukot
-    // Toisin kuin C# listat ja taulukot ovat muuttumattomia (immutable). 
+    // Toisin kuin C#;ssa perus listat ja taulukot ovat muuttumattomia (immutable). 
     let list = [1;2;3]
     let array = [|1;2;3|] 
     
     // list on F# spesifi linkitettynä listana toteutetta rakenne. Array on C#:n System.Array
 
-    // Huom. vaikka itse array tunniste on merkittu ei-muokattavaksi, System.Array on muokattava
-    // näin ollen seuraava on sallittua
+    // Huom. vaikka itse array tunniste on merkittu ei-muokattavaksi, System.Array on muokattava tyyppi.
+    // Seuraava on sallittua
     array.[0]<-5
     array
-    // Se että tunnisteet asettaa tarkoittaa vain sitä, että po tunnisteen arvo ei voi muuttua: 
+    // Se että tunnisteen asettaa ei-muutettavaksi tarkoittaa vain sitä, että po tunnisteen arvo ei voi muuttua: 
     // array <- [|1;2;3|]    // Virhe: This value is not mutable
 
     // Listan indeksointi on mahdollista
@@ -145,7 +145,7 @@ module M3_Listat =
     // Mutta muokaaminen ei:
     // list.[1] <- 5  // Virhe: "Property Item kannot be set"
 
-    // .NET:n muutettavissa olevia voi toki myös käyttää ja net toimivat normaaliin tapaan. 
+    // .NET:n muutettavissa olevia rakenteita voi toki myös käyttää ja net toimivat normaaliin tapaan. 
     let genericList = System.Collections.Generic.List<string>()
 
     // Huom. F# list ja List<T> ovat täysin eri rakenteita:
@@ -184,9 +184,9 @@ module M4_Funktiot =
     let f = fun x -> x
     // Tai esittelemällä parmetrit heti nimen jälkeen
     let f2 x = x
-    // kaikilla funktioilla on vähintään y paramteri, mutta ainokainen paratri voi olla tyyppi "ei mitään". 
+    // kaikilla funktioilla on vähintään yksi parametri, mutta ainokainen parametri voi olla tyyppi "ei mitään". 
     // Ei mitään tyyppin nimi on 'unit' (Microsoft.FSharp.Core.Unit) ja sen literaali on (). 
-    // Ei mitään on objekti toisin kuin C# null. 
+    // Ei mitään on objekti toisin kuin C#:n tai Javan null. 
     let nothingh = ()
     // C#:n void metodien palautus arvo on F#:ssa unit samoin kuin Action delekaattien. Vastaavasti parametrittomien 
     // metodien parametrina on unit.
@@ -203,21 +203,20 @@ module M4_Funktiot =
     plus 1 2
 
     // Yksi kiinnostavimmista ominaisuuksista on funktioiden ketjutus
-    // Idean hahmottaa helpoiten sulkeistamalla. Kun ensimmäisen int:n korvaa 5:llä tyypiksi int->int 
+    // Idean hahmottaa helpoiten sulkeistamalla. Kun ensimmäisen int:n korvaa 5:llä jää tyypiksi int->int 
     // (itse mielessäni usein sulkeistan tähän malliin int->(int->(int)). Kun sijoitan ensimmäisen "slottiin" 
     // numeron 5 (5->(int->(int)), saan funktion int->int kuin sijoitan seuraavan slottiin 5 saan kokonaisluvun 
     // tyyppiä int.
     let lisää_viiteen = plus 5
 
-    // Sijoittamalla ensimmäiseksi arvoksi 5 funktioon tyyppiä int->int, jäljelle jää int, joka itse asiassa saadaan 
-    // suorittamalla funktio loppuun asti.
+    // Sijoittamalla ensimmäiseksi arvoksi 5 funktioon tyyppiä int->int, jäljelle jää int. Funkition varsinainen koodi soriteaan vasta tässä:
     lisää_viiteen 5
     lisää_viiteen 7
 
     // Tämä on konseptina suurempi abstraktio kuin C# optionaaliset parametrit, ja mahdollistaa paremman laiskan evaluoinnin.
     // Sama plus voidaan ilmaista näin:
     let plus2 = (+) 
-    // Miksi? Koska +-operaattori paitsi operaattori myös funktion ja sillä on tyyppi (ja muuttujaan sijoitettuna arvo):
+    // Miksi? Koska +-operaattori paitsi operaattori myös funktion ja sillä on tyyppi, jonka saa selville seuraavalla pätkällä koodi:
     (+).GetType()
 
 module M5_Generics = 
@@ -240,7 +239,7 @@ module M5_Generics =
         input.ToString()
     //val Method2 : 't -> string
 
-    // F# ei ole käytännössä koskaan tarve vääntää C# tapaan rautalangasta, 
+    // F# ei ole käytännössä koskaan tarve vääntää C#:n tapaan rautalangasta, 
     // että 't on geneerinen tyyppi. Moinen on toki mahdollista:
     let Method4<'t>(input:'t) =
         input.ToString()
@@ -302,7 +301,7 @@ module M8_PatternMatching =
     (*
     4. Pattern matching vaihtoehtona if-elselle 
      
-     Lyhyesti: F#:n pattern matchin ong swich-case -rakenne tehtynä oikein
+     Lyhyesti: F#:n pattern matching on swich-case -rakenne tehtynä oikein
      Ks. http://msdn.microsoft.com/en-us/library/dd547125.aspx
     *)
 
@@ -351,10 +350,11 @@ module M9_TyypitJaOlioOrientoitunutOhjelmointi =
     5. Tyypit 
     *)
 
-    // F# on täysiverinen olio orientoitunut ohjelmointi kieli, joskin sen rakenteet kannustavat hyödyntämään muunlaisia 
+    // F# on täysiverinen olio orientoitunut ohjelmointi kieli, mutta sen rakenteet kannustavat hyödyntämään muunlaisia 
     // rakenteita luokkia ja rajapintoja. Itse asiassa luokat ja rajapinnat eivät välttämättä ole edes paras mahdollinen 
     // lähtökohta uudelleenkäytettävälle ja elegantille olio-orientoituneelle koodille.
-    // Usein tarkempi tekninen implementaatio (rajapinta/luokka/...) ei ole käyttäjälle merkityksellinen.
+    // Usein tarkempi tekninen implementaatio (rajapinta/luokka/...) ei ole käyttäjälle merkityksellinen: olio-orientoitunut 
+    // ongelman mallintaminen ei välttämättä auta löytämään hyvää ratkaisua ongelmaan.
 
     // Vertaa melun määrää:
     // C#-luokka:
@@ -372,31 +372,40 @@ module M9_TyypitJaOlioOrientoitunutOhjelmointi =
     // instanssin voi tehdä näin:
     let instance1 = MyClass ()
     // tai näin:
-    let instance2 = new MyClass () // Huomisitko että F# tyypitti pametrin generisesti 'unit'iksi.
+    let instance2 = new MyClass () // Huomisitko että F# tyypitti pametrin property generisesti 'unit'iksi.
 
     // type-avain sanaa voi käyttää myös aliaksen määrittämiseen:
     type dt = System.DateTime
     dt.Now
     
-    // Tyyppimuunnokset eivät yleensä ole F#:ssa tarpeen (eivät myös suositeltuja)
-    // Jos niitä tarvitsee tehdä::
-    let myObject1 = box("juttu")
-    let myString1 = unbox<string>(myObject1)
-    let myObject2 : obj = upcast "juttu"        // C#:ssa tämä ei ole tarpeen automaattisen kontravarianssin (string --> Object; erikoistuneempi --> yleisempi) takia. 
-                                                // F# contravarianssi ei ole auttomaattinen ja se tulee vastaa erityisti jos käyttää rajapintoja.
-    let myString2 : string = downcast myObject2 
-                                                
-    let myObject3 = "juttu" :> obj
-    let myString3 = myObject3 :?> string
-    let integerType = typeof<int> // kuten C#:n typeof()    
+    // Rajapintoja hyödynnettäessa tosin kontravarianttia upcast-muunnosta eli tyyppimuunnosta kapeammasta tyyppistä 
+    // yleisempään ei voi välttää. Kovarianttia tyyppimuunnosta ei juuri koskaan ole pakko käyttää eikä myöskään tulisi.
+    // Tyyppi muunnosten syntaksi on seuraava seuraava:
+    let myObject : obj = upcast "juttu"         // C#:ssa tämä ei ole tarpeen automaattisen kontravarianssin (string --> Object; 
+                                                // erikoistuneempi --> yleisempi) takia. F# kontravarianssi ei ole auttomaattinen.
+                                                // Näin ollen tämä muunnos vastaa erityisti jos käyttää rajapintoja.
+    let myString : string = downcast myObject   // Kovartiantti tyyppimuunnoss yleisemmästä --> erikoistuneenmpaan. Object --> String. 
+                                                // Tätä suositallaan välttämään paitsi F#:ssa niin vahvasti tyypiteyissä kielissä 
+                                                // ylipäänsä. Kovariantit tyyppimuunnokset tuottavat helposti ajonaikaisia bugeja. 
+                                                // F#:ssa on tuskin koskaan tilanteita joissa downcast on usein järkevämäpi vaihtoehto 
+                                                // kuin hahmontunnistuksen (pattern matching) käyttö hyödyntäen tyypintunnistuskaavaa. 
+    
+    // ja sama operaattoreilla                                            
+    let myObject3 = "juttu" :> obj // upcast eli kontravariantti tyyppimuunnos erikoistuneemmasta --> yleisempään.)
+    let myString3 = myObject3 :?> string // downcast eli kovarianetti tyyppimunnos yleisemmästä --> erikoistuneenmpaan.) 
+    let integerType = typeof<int> // kuten C#:n typeof()
+
+    // Tyyppimuunoksille läheist sukua oleva primitiivityyppien objektiin paketointi (boxing) ja objektista palauttaminen (unboxing) 
+    // luonnistuu seuraavati. Boxing on suhteellisen kallis operaatioa, kun huomioi että yleensä sen voi välttää käyttämällä generiksiä. 
+    let myStrObject, myIntAsObject = box("juttu"),box(int)
+    let myString1, myInt1 = unbox<string>(myStrObject),unbox<int>(myIntAsObject)
+    
 
 module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki = 
     // Alla oleva esimerkki havainnollistaa kuinka klassinen validointi dekoraattori on mahdollista toteuttaa 
     // olio-orientoituneesti käyttäen luokkia ja rajapintoja. Seuraavassa esimerkissä haviannollistetaan 
-    // kuin saman voi toteuttaa suunnilleen yhtä olio-orientoituneesti käyttämättä suoranaisesti 
+    // kuinka saman voi toteuttaa suunnilleen yhtä olio-orientoituneesti käyttämättä suoranaisesti 
     // kumpaakaan em. rakenteista.
-
-
     type IValidateInt = 
         abstract Validate: int -> bool 
 
@@ -421,9 +430,9 @@ module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     // Tätä voisi jatkaa ylikuormittamalla && ja || operaattorit tuottamaan AndValidator-luokan, jne.
     // Mutta koodin määrä paisuu yli simppelin esimerkin. 
 
-    // Voisi tehdä myös anonyymilla luokalla, jos instansseja on vain yksi (Object Expression). 
-    // Object Expression on C#:n anonyymien tyyppien "parempi versio". C# käänäjä ei salli rajapinnan 
-    // IValidateInt toteuttavaa anonyymiä tyyppiä. F# sallii: 
+    // Voisi tehdä myös anonyymilla luokalla, jos instansseja on vain yksi. 
+    // Objekti ilmaukset (Object Expression) on C#:n anonyymien tyyppien "parempi versio". C# käänäjä ei salli rajapinnan 
+    // IValidateInt toteuttavaa anonyymiä tyyppiä; F# sallii: 
     let lessThan7Validator = { new IValidateInt with member x.Validate(i) = i<7 }
     lessThan7Validator.Validate 6   // true
     lessThan7Validator.Validate 8   // flase
@@ -431,7 +440,7 @@ module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     // Rajanpinnan käyttö tekee rakenteesta asteen joustavamman, mutta koodia pahaisen ominaisuuden määrittelyyn 
     // tarvitsee kirjoittaa enemmän kuin itse sovellus logiikkan monimutkaisuus soisi. 
 
-    // F#:n jäsennelty unioni (discrimate union) tuo ratkaisun tähän. Oheinen ratkaisu on huomattavasti
+    // F#:n jäsennelty unioni (discriminate union) tuo ratkaisun tähän. Oheinen ratkaisu on huomattavasti
     // monipuolisempi mutta ei juurikaan monimutkaisempi tai pidempi. Tarkasti ottaen jäsennelty unioni 
     // kääntyy abstraktiksi luokaksi, jolla on sen itsensä periviä sisäluokkia. Perinteisesti ymmärrettynä
     // se ei ole luokka vaan jotain muuta. (Vähän kuin "joko-tai-luokka".)
@@ -457,7 +466,7 @@ module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     moreThan20Validator.Validate 9 // false
     moreThan20Validator.Validate 22 // true
 
-    // Ja sitten jotain ihan muuta. Joko parillinen ja yli 10 tai pariton ja alle kymmenen
+    // Ja sitten jotain ihan muuta. Validoidaan onko int joko (1) parillinen ja yli 10 tai (2) pariton ja alle kymmenen
     let complexValidator1 = 
         let isOddValidator = ValidateInt.Predicate (fun x -> (x % 2) = 1)
         let isEvenValidator = ValidateInt.Predicate (fun x -> (x % 2) = 0)
@@ -467,17 +476,15 @@ module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
     complexValidator1.Validate 8 // false
     complexValidator1.Validate 12 // true
 
-    // Jatkoa edellisen kohdan esimerkkille
-    //
     // Ratkaisu toimii mutta syntaksin edellyttämä sulkuhässäkästä on erittäin vaikea lukuinen.
-    // F# sallii luettavuutta helpottavien prefix ja infiksi operaattorien luonnin.
+    // F# sallii luettavuutta helpottavien prefix ja infiksi operaattorien luonnin. Tehdään tässä niin:
     //
     // Harmittavasti CLI (Common Language Infrastructure) ei anna määrittää && tai || operaattoreja 
     // jotka palauttavat jotain muuta kuin booleanin.  (op_BooleanAnd toimisi, mutta return-tyyppi on väärä)
     // Käytössä ovat esim.  &&& ja |||  tai  +& ja +|  mutta molemmat ovat hieman kryptisiä nimiä, mutta 
-    // parempi kuin ei mitään.
+    // parempia kuin ei mitään.
     //
-    // Uusia operaattoreja voi määrittää osana luokan esittelyä tai globaalisti sen esittelyn jälkeen:
+    // Uusia operaattoreja voi määrittää osana luokan esittelyä tai globaalisti sen esittelyn jälkeen näin:
     let inline (&&&) (fst:ValidateInt) (snd : ValidateInt) =
             ValidateInt.And (fst,snd)
     let inline (|||) (fst:ValidateInt) (snd:ValidateInt) =
@@ -508,6 +515,10 @@ module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
             |> fun this -> match this with Some v -> v | None  -> Predicate (fun i -> true)
         member x.OrAny (alternatives:ValidateInt list) = ValidateInt.Any (x :: alternatives)            
     
+    // Muokataan edellisen kohdan validaattoria seuraavan laiseksi
+    // 1) 23 on validi aina
+    // 2) Parilliset luvut ovat valideja, jos ne ovat suurempia kuin kymmenen
+    // 3) Parittomat luvut ovat valideja, jos ne ovat pienempi kuin kymmenen (poislukien tietty luvun 23)
     let complexValidator3 =
         let isOddValidator = ValidateInt.Predicate (fun x -> (x % 2) = 1)
         let isEvenValidator = ValidateInt.Predicate (fun x -> (x % 2) = 0)
@@ -522,30 +533,114 @@ module M10_TyypitJaOlioOrientoitunutOhjelmointi_Esimerkki =
 module M11_LoopitJaListaOperaatiot = 
     (*
     6. Loopit ja listaoperaatiot
-     - for
-     - komentojen putkitus (pipelines)
-     - Seq ja List -operaatiot
     *)
-    // Klassinen for loopi toimii näin:
+
+    // Klassinen for-loopi toimii näin:
     for i = 1 to 3 do printfn "Jee %d" i
     for i = 3 downto 1 do printfn "Jee %d" i
 
-    // C#:n foreachia vastaava rakenne näyttää F#:ssa tältä. 
-    let simpleList = [1;2;3]
+    // C#:n foreachia vastaava rakenne näyttää F#:ssa tältä.
     for i in [1;2;3] do printfn "Jee %d" i
 
     // Usein for loopeja tehokkaampaa ja elegantimpaa on putkittaa komentoja. |> operaattorilla
-    // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin selvennä juurikaan koodia.)
+    // (Yksinkertaisissa tapauksissa putkitus ei tosin selvennä juurikaan koodia.)
     let anotherList = [1;2;3]
-    anotherList  |> List.iter (printfn "Jee %d") 
+    anotherList |> List.iter (printfn "Jee %d") 
 
+    // Yksittäiseen alkioon viittaaminen tapahtuu seuraavasti:
+    let simpleList = [1;2;3;4] 
+    let fourth = simpleList.[3]
+
+    // List.iter on epäilemättä yksi tavanomaisemmin hyödynnettävistä F#:n operaattoreista. Muita kiinnostavia funtioita ovat mm. 
+    // map, fold, filter, sortBy, forall ja exists.
+    //
+    // Seuraavaa koodi esimerkki havainnollistaa monien eri lista operaattorien hyödyntämisestä yhdessä toisiinsa putkitettuna työnkulkuna:
+    // 1) filter tuottaa listan jossa on vain filteröinti ehdon täyttävät rivit. Se vastaa LINQ:n Whereä
+    [1;2;3] |> List.filter (fun i -> i % 2 = 1) // palauttaa [1;3]
+    // 2) forall palauttaa true:n jos ja vain jos kaikkille riveille jokin annettu ehto on tosi. forall vastaa LINQ:n All:ia.
+    [1;2;3] |> List.forall (fun i -> i % 2 = 1) // false; kaikki eivät ole parittomia
+    [1;2;3] |> List.exists (fun i -> i % 2 = 1) // true; on vähintään yksi pariton
+    // 3) sortBy on vastaa LINQ:n SortBy:ta ja nimensämukaseisti järjestää elementit nousevaan suuruusjärjestykseen - siten että korkein 
+    // arvo on ensin. Päin vastaisen järjestyksen saa aikaiseksi helposti esim hyödyntämällä vastalukua tai hyödyntämällä listavan kääntävä
+    // rev:iä. Sort on sortBy objektilla joka on vertailtavissa (comparable) itsessään ja sellaisenaan.
+    [2;3;1] |> List.sort                 // [1; 2; 3]
+    [2;3;1] |> List.sortBy (fun i -> -i) // [3; 2; 1]
+    [2;3;1] |> List.sort |> List.rev     // [3; 2; 1]
+
+    // 4) fold vastaa LINQ:n Aggregatea. Aggregate riviriviltä päivittää eli tuottaa uuden arvonkerryttimen (accumulator). 
+    // Esim. listan summa on aggrekaatti jossa ensin nollaan on lisätty ensimmäisen rivin arvo, sitten ensimmäisen rivin 
+    // arvoon toisen rivin arvo, ja sitten kolmanteen ensimmäisen ja toisen rivin summa jne. kunnes N:nteen riviin lisätään 
+    // kaikkea sitä edeltävien rivien akkumuloitu summa. Alla olevat lyhyt rivi selventää foldin käyttöä
+    [1;2;3] |> List.fold (+) 0 // palautta: (((0+1)+2)+3) = 6. Sulkeet lisätty selventämään mitä missäkin loopin syklissä tapahtuu. 
+    // 5) map ja LINQ:n Select ovat molemmat projektioita listasta tyyppiä list 'T toiseen listaan tyyppiä list 'u
+    [1;2;3] |> List.map (fun x->x+1) //[2; 3; 4]
+
+    // Alla on myö havainnollistettu tietyätyypin (record type) käyttöä sekä sitä kuinka funktioita voi käyttää ilman 
+    // sen suurempia kommervenkäjä listan yksittäisinä kohteina. 
+    
+    // Record type muisuttaa C# structia kuitenkaan olematta struct. Sen keskeisin käyttö ratkoitus on toimia oletukena 
+    // ei-muutettavana ja vahvasti tyypitettynä säilönä kompleksiselle datalle.
+    type Candidate =
+        {
+            Name : string                           
+            Age : int
+            WorkExperience: float
+            HighschoolGeneralGrade: float
+        }
+    let requirementRules = // Huomaa: jos listan yksittäisen rivin esittelee aina omalla rivillään 
+        [                  // ilmauksen lopettavaa ";":ttä ei tarvitse käyttää!
+        (fun c -> c.Age >= 18)
+        (fun c -> c.HighschoolGeneralGrade >= 7.0)
+        (fun c -> c.WorkExperience >= 0.5)]
+    let scoringRules = 
+        [
+        (fun c -> 9.0 / c.WorkExperience)
+        (fun c -> System.Math.Sqrt (10.0 / (System.Math.Max (c.WorkExperience, 10.0))))
+        ]
+    let candidates = 
+        [   // F# arvaa varsin usein mitä tietuetyyppiä käyttäjä haluaa käyttää sen sisältämien kenttien nimistä.
+            // Jos näin ei käy voi ensimmäisen kentän eteen laittaa tyypin nimen auttamaan kääntäjää seuraavaan tapaan:
+            {Candidate.Name="Tim"; Age=30; WorkExperience=4.0; HighschoolGeneralGrade=8.2}
+            // Tyypillisesti seuraava riittää:
+            {Name="Anna"; Age=17; WorkExperience=0.0; HighschoolGeneralGrade=9.2}
+            {Name="Elsa"; Age=37; WorkExperience=15.0; HighschoolGeneralGrade=7.2}
+            {Name="Arnold"; Age=42; WorkExperience=22.0; HighschoolGeneralGrade=5.2}
+            {Name="Emily"; Age=27; WorkExperience=2.0; HighschoolGeneralGrade=9.8}
+            {Name="Erwin"; Age=22; WorkExperience=1.0; HighschoolGeneralGrade=8.8}
+        ]
+    let ranking = 
+        candidates
+        // Ensin vilteröidään joukosta pois ne jotka eivät täytä minini vaatimuksia
+        |> List.filter (fun c -> requirementRules |> List.forall (fun f -> f c))
+        // Sitten lasketaan rankking arvo kertomalla 1:llä kaikkin ränkkin funtioiden antamat tulokset
+        |> List.sortBy (fun c -> scoringRules |> List.fold (fun (acc:float) (f) -> f c) 1.0)
+        // Lopuksi valitaan näytettäväksi nimi, käyttäen map-funtiota
+        |> List.map (fun c -> c.Name)
+
+    // Lisää jokaiseen lista elementtiin kaikien sitä edeltäneiden elementtien summa:
+    let increaseBySumOfPrecessors list = 
+        let initialAccumulator = (0, List.empty<int>)
+        let processItem ((sumAccumulator:int), (listAccumulator:int list)) (current:int) =
+            let newSum = sumAccumulator + current
+            let newList = newSum::listAccumulator 
+            newSum, newList 
+        let returnList ((sumAccumulator:int), (listAccumulator:int list)) = 
+            listAccumulator
+            |> List.rev // accumulator add new item alway to the beginning of list - result list is reverse version of that.
+        list |> List.fold processItem initialAccumulator |> returnList
+    increaseBySumOfPrecessors [1;2;3;5;7;10]
+    
     // Sequence expression: For looppia voi käyttää listojen generointiin. 
-    open System
-    let firstday2012 = new System.DateTime(2012,1,1)
-    let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)}
+    open System // Yleisesti ottaen selkeintä on avata tarvittavat nimiavaruudet modulen alussa. Skripteissä nimiavaruuden 
+                // voi avata periaatteessa milloin vain. Käännetyssä koodissa paikka on suuremmassa määrin rajoitettu.
+    let firstday2012 = new DateTime(2012,1,1)
+    let year2012 = seq {for i in 0.0 .. 365.0 -> firstday2012.AddDays(i)} // Tässä luodaan sekvenssi erityistä seq builder syntaksia hyödyntäen
+                                                                          // tämä tapa esitellä lista on erityisen näppärä kun käsitellään
+                                                                          // äärettömän pitkiä listoja. Esimerkki tästä alla. 
 
-    // sequenssi voidaan tehdä myös yield-käskyllä, joka on sama kuin muualla .NET:issä.
-    // F# tukee seq-operaatioissa myös yield! joka yieldaa koko setin osaksi paluuarvoa:
+    // Sekvenssi voidaan tehdä myös yield-käskyllä, joka on sama kuin C#:ssa. (Visual basiciin yield tulili vasta versioon 9, PowerShellistä se
+    // se puuttuu edelleen, mikä tosin ei kielen luonteen takia juurikaan haittaa. 
+    // F# tukee seq-operaatioissa myös avain sanaa yield! joka yieldaa koko setin osaksi paluuarvoa:
     let rec iterate f value = 
       seq { yield value; 
             yield! iterate f (f value) }
@@ -553,34 +648,20 @@ module M11_LoopitJaListaOperaatiot =
     let xs = iterate (fun f-> f + 1) 0
              |> Seq.take(10) |> Seq.toList
 
-    // val x : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
-
-    // seq { ... } ja muihin Computation Expressioneihin (monad) palataan myöhemmin...
-
-    // Usein for loopeja tehokkaampaa ja elegantimpaa on putkittaa komentoja. |> operaattorilla
-    // (Yksinkertaisissa tapauksissa tosin putkitus ei tosin vielä selvennä juurikaan koodia.)
-    simpleList |> List.iter (printfn "Jee %d") 
-
-    // Koontifunktioiden (Aggregate) "isä" on fold:
-    simpleList |> List.fold (+) 0
-
-    // Yksittäiseen alkioon viittaaminen, ei yleensä tarvetta:
-    let fourth = simpleList.[3]
-
+    let nextThenHours = 
+        iterate (fun (f : System.DateTime) -> (f.AddHours(1.0))) System.DateTime.Now 
+        |> Seq.take(10) 
+        |> Seq.toList
+    
+    
     // Kun loopin logiikka monimutkaistuu, komentojen putkitus alkaa selkeyttämään koodia enevässä määrin.
     // Funktionaalinen ohjelmointiparadigma on vahvimmillaan nimenomaan monimutkaisten ongelmien parissa puuhatessa.
     year2012 
     |> Seq.filter (fun day -> day.DayOfWeek = DayOfWeek.Friday && day.Day = 13)
     |> Seq.iter (printfn "%O")
 
-    // Yhdistefunktion esimerkki, itse lista voidaan määrittää jälkikäteen ilman parametreja:
-    let prosessoi =  List.filter (fun x -> x > 4) >> List.map (fun y -> y+1) >> List.iter(printfn "%d")
-    prosessoi [1..10]
-    prosessoi [8..-2..4]
-
     // Operaatiokirjasto on vähän monipuolisempi kuin LINQ, joten sillä pääsee pitkälle.
     // Kun voima loppuu kesken, astuu kuviin rekursio ja pattern matching.
-
 
     // Seuraavassa esimerkissä näytetään tämän vuoden perjantai 13. -päivät ja milloin vastaava päivämäärä on perjantai seuraavan kerran.
     let rec findNextSameFriday13 (day : DateTime) =
@@ -594,9 +675,10 @@ module M11_LoopitJaListaOperaatiot =
     |> Seq.map (fun day -> (day, findNextSameFriday13 day))  //Mappaus tyypistä toiseen: "projektio/select/..."
     |> Seq.iter(fun (day2012, dayN) ->  (printfn "%s on seuraavan kerran perjantai 13. vuonna %d" (day2012.ToString("dd.MM")) dayN.Year))
 
-    // F# sallii äärettömät sekvenssit. Seuraava funktio etsii ensimmäisen perjantaina joka on kolmastoista päivä ja jolle 
+    // F# sallii äärettömät sekvenssit. Seuraavaksi etsitään ensimmäisen perjantaina joka on kolmastoista päivä ja jolle 
     // vuosi * kuukausi * päivä on suurempi kuin 1 000 000. 
-    // Esim. jos 13.12.2012 olisi perjantai vuoden, kuukauden ja päivän tulo (13 x 12 x 2012) olisi 313872
+    // Esim. jos 13.12.2012 olisi perjantai vuoden, kuukauden ja päivän tulo (13 x 12 x 2012) olisi 313872. Tässä toinen esimerkki
+    // äärettömistä listoista ja siitä mitä hyötyä sellaisesta on. 
 
     // 1. Ensin koodia selventävä apufunktio seuraavan kolmannentoista päivän hakemiseen. 
     let rec findNextFriday (day : DateTime) =
@@ -615,8 +697,6 @@ module M11_LoopitJaListaOperaatiot =
     let emptyList = []
     let listOfListOfIntegers = [[1;2;3];[4;5;6]]
 
-
-
     // Listoja voi yhdistellä (merge):
     let merged1to6 = [1;2;3] @ [4;5;6]
     //val merged1to6 : int list = [1; 2; 3; 4; 5; 6]
@@ -625,7 +705,7 @@ module M11_LoopitJaListaOperaatiot =
     let mylist = "head" :: ["tail1"; "tail2"]
     mylist
     // Tyypillinen match koontifunktiolle on jotain tämän suuntaista:
-    // (Yksinkertaistettuna, tämänhän voi tehdä vielä myös perus listaoperaatioilla)
+    // (Yksinkertaistettuna, tämänhän voi tehdä vielä myös peruslistaoperaatioilla)
     let rec sample f x =
         match x with
         | [] -> 0
@@ -642,3 +722,4 @@ module M11_LoopitJaListaOperaatiot =
     // val it : int [,] = [[1; 2; 3]
     //                     [2; 3; 4]
     //                     [3; 4; 5]]
+    

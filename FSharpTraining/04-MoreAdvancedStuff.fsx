@@ -15,6 +15,12 @@
     p "Syöte"
     p "Syöte2"    // Tähän palataan tarkemmin listojen yhteydessä.
 
+    // Yhdistefunktion esimerkki, itse lista voidaan määrittää jälkikäteen ilman parametreja:
+    let prosessoi =  List.filter (fun x -> x > 4) >> List.map (fun y -> y+1) >> List.iter(printfn "%d")
+    prosessoi [1..10]
+    prosessoi [8..-2..4]
+
+
 module M2_IO = 
     (*
     7. .NET yleisiä toiminnallisuuksia

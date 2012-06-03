@@ -10,6 +10,81 @@
 // Usein on huono idea lähteä miettimään F#-ratkaisua suoraa C#-koodin pohjalta: tämä johtaa samanlaiseen koodiin
 // kuin jos VB 6 koodia kääntäisi C#-koodiksi. Siitä huolimatta suurin osa nykypäivän koodista on C#-koodia.
 // Pisteiden laskenta noudattaa logiikkaa joka sallii sivuvaikutukset (mutable).
+
+
+
+
+
+
+
+module FuntionalSolution =
+    open Contract 
+
+    type Frame =
+        | FirstThrow of int 
+        | CompleteAndIncludeNextTwo of int
+        | CompleteAndIncludeNextOne of int
+        | LastRoundIncludeNextOne of int
+        | CompleteFrame of int 
+        | Empty
+        member x.FrameScore = 
+            match x with         
+            | LastRoundIncludeNextOne current | FirstThrow current | CompleteFrame current 
+            | CompleteAndIncludeNextTwo current | CompleteAndIncludeNextOne current -> current
+            | _ -> 0
+        static member Add (pins:int) (scorecard:Frame list) =
+            let updateSparesAndStrikes (scorecard:Frame list) : Frame list  =
+                let completeItem (itemToComplate) = 
+                    match itemToComplate with 
+                    | CompleteAndIncludeNextOne total -> CompleteFrame (total+pins)
+                    | CompleteAndIncludeNextTwo total -> CompleteAndIncludeNextOne (total+pins)
+                    | _ -> itemToComplate
+                scorecard |> List.map completeItem
+            let addThrow (scorecard:Frame list) =
+                let setLastFrame last tail (scorecard:Frame list) = 
+                    let round = scorecard |> List.length
+                    match last with
+                    // Last throw after score or strike in the last round
+                    | LastRoundIncludeNextOne (total) -> CompleteFrame (total+pins)::tail
+                    // Last round spare
+                    | FirstThrow (lastThrow ) when pins + lastThrow = 10 && round = 10 -> 
+                        (LastRoundIncludeNextOne (10))::tail
+                    // Spare
+                    | FirstThrow (lastThrow) when pins + lastThrow = 10 && round <> 10 -> 
+                        (CompleteAndIncludeNextOne (10))::tail                    
+                    // last round strike or score
+                    | _ when pins  = 10 && round = 9 -> (LastRoundIncludeNextOne (10))::scorecard
+                    // normal strike
+                    | _ when pins = 10 -> (CompleteAndIncludeNextTwo (10))::scorecard
+                    // second throw; not spare
+                    | FirstThrow (lastThrow ) when pins + lastThrow <> 10 && round <> 10 -> (CompleteFrame (lastThrow + pins))::tail
+                    // first throw but not first in the whole game
+                    | _ -> FirstThrow (pins)::scorecard
+                match scorecard with 
+                    | [] -> setLastFrame Empty [] scorecard
+                    | last::tail -> setLastFrame last tail scorecard
+            scorecard |> updateSparesAndStrikes |> addThrow
+
+    type Game (list:Frame list) =
+        let mutable scorecard  = list
+        new() = Game (List.Empty)
+        interface IGame with
+            member x.Score = scorecard |> List.sumBy (fun frame -> frame.FrameScore)
+            member x.Add(pins : int) = 
+                scorecard <- Frame.Add pins scorecard
+            member x.ScoreForFrame(theFrame) =  
+                scorecard |> List.rev |> List.toSeq |> Seq.take theFrame |> Seq.sumBy (fun f -> f.FrameScore)
+             
+    module Tests = 
+        open Microsoft.VisualStudio.TestTools.UnitTesting
+        [<TestClass>]
+        type FPBowlingTest () =
+            inherit BowlingTestsBase() 
+            override x.newGame ()  = (new Game()):>IGame
+
+
+
+
 module AlmostOriginalImplementation =
     open Contract 
     type Scorer =
@@ -64,6 +139,7 @@ module AlmostOriginalImplementation =
                 x.scorer <- x.scorer.AddThrow(pins) 
                 adjustCurrentFrame(pins) 
             member x.ScoreForFrame(theFrame) = x.scorer.ScoreForFrame(theFrame); 
+
     module Tests = 
         open Microsoft.VisualStudio.TestTools.UnitTesting
         [<TestClass>]
