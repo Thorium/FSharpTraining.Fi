@@ -21,7 +21,7 @@ helpompi ymmärtää ja seurata.
 Harperin pointti oli osoittaa että F# on hemmetin tehokas kieli tällaisiin C# ratkaisussa ongelma domainin määrittelyyn 
 käytetiin 20 riviä koodia ja itse ratkaisu vaati noin 200 riviä C# koodi (Harperin mukaan; en ole tarkastanut tätä). 
 Harperin ratkaisi ongelman 19 rivillä ja niin tehdessään joutui tinkimään luvattoman paljon luettavuudesta ja selkeydestä. 
-Alla oleva huolellisesti kommentoidulla ratkaisulla on pituutta 63 riviä kommentit mukaan lukien - eli lähes 4 kertaa 
+Alla oleva huolellisesti kommentoidulla ratkaisulla on pituutta reilu 60 riviä kommentit mukaan lukien - eli edelleen lähes 4 kertaa 
 vähemmän kuin C# verrokissa.
 
 Koodi rivien määrällä sinänsä ei ole väliä - kokonaisuus ratkaisee. Useimmissa tapauksissa 200 sivuisen kirjan lukee ja 
@@ -92,16 +92,17 @@ module Solver =
                             if neighbor = countryInProcess && Set.contains country processedCountries then
                                 yield country|]
             Set.add countryInProcess processedCountries,
-            // muodostetaan lista kaikista mahdollisista maa väri kartoista ratkaisuista.
+            // Muodostetaan lista kaikista mahdollisista maavärikartoista.
+            //
             // Ensimmäisellä kerralla sellaista ei ole tällöin ensimmäinen maa saa 
             // ensimmäisen värin, toinen toisen kolmas kolmannen ja neljäs neljännen
             // jos maita sattui olemaan enemmän, niin ne käsitellään myöhemmillä iteraatioilla
             // 
-            // Seuraavalla maalle tehdään samoin sillä erolla, että aina tarkastetaan jonko jollekin sen naapurimaalle jo 
-            // annettu jokin väri. Väri lisätään listaan vain jos listassa ei ole Kun kaikki maat on käyty tällä tavalla
+            // Seuraavalla maalle tehdään samoin sillä erolla, että aina tarkastetaan onko jollekin sen naapurimaalle jo 
+            // annettu sama väri. Väri lisätään listaan vain jos listassa ei ole Kun kaikki maat on käyty tällä tavalla.
             //
             // Viimeisenä jonosta pullahtaa ulos sellainen ratkaisu, jossa kaikille maille on annettu jokin väri. Toimivia 
-            // ratkaisuja voi toki olla useita. Viimeinen joko on niistä, jos ratkaisu ylipäänsä löytyi. Elli löytynyt 
+            // ratkaisuja voi toki olla useita ja viimeinen on varmuudella jokin niistä, jos ratkaisu ylipäänsä löytyi. Ellei löytynyt 
             // niin ratkaisu listasta puuttuu jokin maa.
             seq { for possibleColorMap in solutions do
                     for newColor in allColors do

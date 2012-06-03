@@ -39,16 +39,18 @@ module HttpListenerHelpers =
                     else cont res.Result)
                 x.DownloadDataAsync(uri) )
 
-    // C#:n extension metodeilla pystyy laajentamaan luokalle vain instanssin metodeja muttei ei staattisia metodeja. F#:ssa ei ole tätä rajoitusta.
+    // C#:n extension metodeilla pystyy laajentamaan luokalle vain instanssin metodeja muttei ei staattisia metodeja. 
+    // F#:ssa ei ole tätä rajoitusta.
     type System.Net.HttpListener with 
         static member Start(url, f) = 
             let tokenSource = new CancellationTokenSource()
             
-            // Asycn Start käynnistää uuden säikeen. Säikeen sisällä käynnistetään http liikenteen kuuntelija parametrina annettuun osoitteeseen.
+            // Asycn Start käynnistää uuden säikeen. Säikeen sisällä käynnistetään http-liikenteen kuuntelija parametrina 
+            // annettuun osoitteeseen.
             //
-            // Huomaa. Async on täysin eri asia kuin async-avainsana ja siihen liittyvä AsyncBuilder luokka. Async-luokka sisältää logiikan laskennan
-            // suorittamiseen asynkronisesti. AsyncBuilderilla taas luodaan asynkronisissa työnkulkuja (hyödyntäen Async-objekteja). Siten se on 
-            // abstraktio tasoltaan asteen Asyncin yläpuolella.
+            // Huomaa. Async on täysin eri asia kuin async-avainsana ja siihen liittyvä AsyncBuilder luokka. Async-luokka 
+            // sisältää logiikan laskennan suorittamiseen asynkronisesti. AsyncBuilderilla taas luodaan asynkronisissa 
+            // työnkulkuja (hyödyntäen Async-objekteja). Siten se on abstraktio tasoltaan asteen Asyncin yläpuolella.
             Async.Start
                 ((async { 
                     use listener = new HttpListener()
@@ -75,7 +77,7 @@ module HttpListenerHelpers =
             HttpListener.Start(url, f >> async.Return) 
             // Sivuhuomiona: ">>" operaattori on F#-versio matematiikan yhdistetyn funktion pallo-operaattorille; 
             // esim f o g (x) on sama kuin g(f(x)) olettaen, että f on kuvaus x->y ja g kuvaus y->z 
-            // f >> async.Return on sama kuin (fun context -> async.Return ( f (context)))
+            // f >> async.Return on sama kuin (fun context -> async.Return ( f (context))). 04-MoreAdvanceStuff
 
 module ASyncLister = 
     open System
@@ -186,6 +188,8 @@ module SyncVersion =
         if (token <> null) then token.Cancel()
 
 (*
+
+// Käynnistä peilaus suorittamalla jompikumpi alla olevista StartMirroring metodeista.
 ASyncLister.StartMirroring "http://msdn.microsoft.com"
 ASyncLister.Stop()
 

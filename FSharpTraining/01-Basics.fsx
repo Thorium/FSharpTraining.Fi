@@ -142,10 +142,10 @@ module M3_Listat =
 
     // Listan indeksointi on mahdollista
     list.[0]
-    // Mutta muokaaminen ei:
+    // Mutta muokaaminen ei; ks. alla oleva, kääntäjän takia pois kommentoitu virheentuottava esimerkki. 
     // list.[1] <- 5  // Virhe: "Property Item kannot be set"
 
-    // .NET:n muutettavissa olevia rakenteita voi toki myös käyttää ja net toimivat normaaliin tapaan. 
+    // .NET:n muutettavissa olevia rakenteita voi toki myös käyttää ja ne toimivat kuten C#:ssa. 
     let genericList = System.Collections.Generic.List<string>()
 
     // Huom. F# list ja List<T> ovat täysin eri rakenteita:
@@ -594,8 +594,8 @@ module M11_LoopitJaListaOperaatiot =
         (fun c -> c.WorkExperience >= 0.5)]
     let scoringRules = 
         [
-        (fun c -> 9.0 / c.WorkExperience)
-        (fun c -> System.Math.Sqrt (10.0 / (System.Math.Max (c.WorkExperience, 10.0))))
+        (fun c -> c.HighschoolGeneralGrade / 9.0)
+        (fun c -> match c.WorkExperience  with | exp when exp < 2.0 -> 1.0 | exp when 2.0 <= exp && exp < 10.0 -> 1.1 | _ -> 1.3   )
         ]
     let candidates = 
         [   // F# arvaa varsin usein mitä tietuetyyppiä käyttäjä haluaa käyttää sen sisältämien kenttien nimistä.
@@ -613,9 +613,11 @@ module M11_LoopitJaListaOperaatiot =
         // Ensin vilteröidään joukosta pois ne jotka eivät täytä minini vaatimuksia
         |> List.filter (fun c -> requirementRules |> List.forall (fun f -> f c))
         // Sitten lasketaan rankking arvo kertomalla 1:llä kaikkin ränkkin funtioiden antamat tulokset
-        |> List.sortBy (fun c -> scoringRules |> List.fold (fun (acc:float) (f) -> f c) 1.0)
+        |> List.sortBy (fun c -> scoringRules |> List.fold (fun (acc:float) (f) -> acc * f c) 1.0)
         // Lopuksi valitaan näytettäväksi nimi, käyttäen map-funtiota
         |> List.map (fun c -> c.Name)
+        // Lopuksi käännetä järjestys ympäri, koska oletuksena järjetys on pienemmästä suurempaan
+        |> List.rev
 
     // Lisää jokaiseen lista elementtiin kaikien sitä edeltäneiden elementtien summa:
     let increaseBySumOfPrecessors list = 
